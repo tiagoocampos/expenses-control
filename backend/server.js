@@ -2,15 +2,18 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import db from "./database/db.js";
-import routes from "./routes/expensesRoutes.js"
+import expenseRoute from "./routes/expensesRoutes.js"
+import categoryRoute from "./routes/categoryRoutes.js";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/",routes);
+
 const PORT = process.env.PORT;
 
+app.use("/", expenseRoute);
+app.use("/", categoryRoute);
 
 
 app.get("/", (req, res) => {
