@@ -18,3 +18,22 @@ export function createExpense(req, res) {
 });
 }
 
+export function getExpense(req, res) {
+    const sql = `
+        SELECT 
+            e.id,
+            e.title,
+            e.amount,
+            e.date,
+            c.name AS category_name
+        FROM expenses e
+        JOIN categories c ON e.category_id = c.id
+    `
+    db.query(sql, (err, results) => {
+        if(err){
+            console.log(err);
+            return res.status(500).json({ message: "Erro ao buscar gastos"})
+        }
+        return res.status(200).json(results);
+    })
+}

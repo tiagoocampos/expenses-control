@@ -12,8 +12,8 @@ app.use(cors());
 
 const PORT = process.env.PORT;
 
-app.use("/", expenseRoute);
-app.use("/", categoryRoute);
+app.use("/expense", expenseRoute);
+app.use("/categories", categoryRoute);
 
 
 app.get("/", (req, res) => {
