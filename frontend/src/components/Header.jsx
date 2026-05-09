@@ -27,7 +27,7 @@ export function Header() {
                         </Link>
                     </li>
 
-                    <li className={"text-gray-300"}>Categorias</li>
+                    <li className={"text-gray-300"}><Link to="/categories">Categorias</Link></li>
                 </ul>
             </div>
         </div>

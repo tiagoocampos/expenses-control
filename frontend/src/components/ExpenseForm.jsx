@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CreateCategoryModal } from "./CreateCategoryModal";
+import { Link } from "react-router-dom";
 
 export function ExpenseForm() {
 
@@ -9,6 +10,12 @@ export function ExpenseForm() {
     const [date, setDate] = useState("");
     const [categoryList, setCategoryList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    function linkToCategories() {
+        return (
+            <Link to="/categories">Categories</Link>
+        )
+    }
 
     async function getCategory() {
 
@@ -139,6 +146,10 @@ export function ExpenseForm() {
                         <option className="bg-green-500" value="create">
                             + Criar nova
                         </option>
+
+
+
+
 
                     </select>
 
