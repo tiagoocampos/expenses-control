@@ -9,13 +9,7 @@ export function CategoriesPage() {
 
 
 
-    const mockCategories = [
-        {
-            id: 1,
-            name: "Categoria 1",
-            expensesCount: 0,
-        },
-    ];
+
     const [categoryList, setCategoryList] = useState([]);
     async function getCategory() {
 
@@ -28,13 +22,22 @@ export function CategoriesPage() {
 
     }
 
+    const [expensesByCategory, setExpensesByCategory] = useState([]);
+    async function getExpensesByCategory() {
+        const res = await fetch("http://localhost:3000/expense/by-category");
+        const data = await res.json();
+        setExpensesByCategory(data);
+        console.log(data)
+    }
+
     useEffect(() => {
         getCategory();
+        getExpensesByCategory();
     }, []);
 
-    const mockSelectedCategory = mockCategories[0];
-    const selectedCategory = categoryList[0];
 
+    const selectedCategory = categoryList[0];
+    const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategory?.id);
     return (
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
@@ -114,7 +117,7 @@ export function CategoriesPage() {
                             <div className="flex items-end justify-between gap-4 mb-4">
                                 <div>
                                     <div className="text-gray-400 text-sm">Gastos da categoria</div>
-                                    <div className="text-2xl font-bold mt-1">{mockSelectedCategory?.name}</div>
+                                    <div className="text-2xl font-bold mt-1">{selectedCategory?.name}</div>
                                 </div>
 
                                 <div className="text-sm text-gray-400">
@@ -138,8 +141,8 @@ export function CategoriesPage() {
                                     <tbody>
                                         {/* Layout (placeholders). Renderize as despesas filtradas por categoria depois. */}
                                         <tr className="border-b border-gray-700">
-                                            <td className="py-3">Mock gasto</td>
-                                            <td className="py-3">R$ 0,00</td>
+                                            <td className="py-3">{categoryList[0]?.name}</td>
+                                            <td className="py-3">{ }</td>
                                             <td className="py-3">—</td>
                                             <td className="py-3">
                                                 <div className="flex gap-2">

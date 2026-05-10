@@ -60,3 +60,54 @@ export function getTotalExpenses(req , res) {
     })
 
 }
+
+export function getExpensesByCategory(req, res) {
+    const user_id = 1;
+
+    const sql = `
+        SELECT
+        c.id AS category_id,
+        c.name AS category_name,
+        e.id,
+        e.title,
+        e.amount,
+        e.date
+        FROM expenses e
+        JOIN categories c ON e.category_id = c.id
+        WHERE e.user_id = ?
+        ORDER BY c.name
+    `
+
+    db.query(sql, [user_id], (err, results) =>{
+        if(err){
+            console.log(err)
+            return res.status(500).json({ message: "Erro ao buscar gastos por categoria"})
+        }
+
+        const grouped = new Map();
+
+        for (const row of results){
+            const categoryKey = row.category_id;
+            if(!grouped.has(categoryKey)) {
+                grouped.set(categoryKey, {
+                    category_id: row.category_id,
+                    category_name: row.category_name,
+                    total: 0,
+                    expenses: []
+                })
+            }
+            
+            const category = grouped.get(categoryKey);
+
+            category.expenses.push({
+                id: row.id,
+                title: row.title,
+                amount: row.amount,
+                date: row.date
+            });
+
+            category.total += Number(row.amount) || 0;
+        }
+        return res.status(200).json(Array.from(grouped.values()))
+    })
+}
