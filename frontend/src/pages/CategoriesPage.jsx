@@ -68,11 +68,13 @@ export function CategoriesPage() {
 
                         <div className="space-y-2">
                             {categoryList.map((c) => (
+
+
                                 <button
                                     key={c.id}
                                     type="button"
                                     className={
-                                        "w-full text-left bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3" +
+                                        "w-full text-left cursor-pointer bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3" +
                                         (c.id === selectedCategory?.id
                                             ? " ring-1 ring-green-600"
                                             : "")
@@ -82,8 +84,9 @@ export function CategoriesPage() {
                                         <div>
                                             <div className="font-medium">{c.name}</div>
                                             <div className="text-gray-400 text-xs mt-1">
-                                                {c.expensesCount} gastos
+                                                {expensesByCategory.find((x) => x.category_id === c.id)?.expenses?.length ?? 0} gastos
                                             </div>
+
                                         </div>
                                         <div className="flex gap-2">
                                             <button
@@ -140,27 +143,43 @@ export function CategoriesPage() {
 
                                     <tbody>
                                         {/* Layout (placeholders). Renderize as despesas filtradas por categoria depois. */}
-                                        <tr className="border-b border-gray-700">
-                                            <td className="py-3">{categoryList[0]?.name}</td>
-                                            <td className="py-3">{ }</td>
-                                            <td className="py-3">—</td>
-                                            <td className="py-3">
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        type="button"
-                                                        className="bg-gray-800 hover:bg-gray-700 transition-colors px-3 py-1.5 rounded-lg text-sm"
-                                                    >
-                                                        Editar
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="bg-red-600 hover:bg-red-500 transition-colors px-3 py-1.5 rounded-lg text-sm"
-                                                    >
-                                                        Remover
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        {selectedCategoryExpenses?.expenses.map((expense) => (
+                                            <tr
+                                                key={expense.id}
+                                                className="border-b border-gray-700"
+                                            >
+                                                <td className="py-3">
+                                                    {expense.title}
+                                                </td>
+
+                                                <td className="py-3">
+                                                    R$ {expense.amount}
+                                                </td>
+
+                                                <td className="py-3">
+                                                    {new Date(expense.date).toLocaleDateString("pt-BR")}
+                                                </td>
+
+                                                <td className="py-3">
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            type="button"
+                                                            className="bg-gray-800 hover:bg-gray-700 transition-colors px-3 py-1.5 rounded-lg text-sm"
+                                                        >
+                                                            Editar
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="bg-red-600 hover:bg-red-500 transition-colors px-3 py-1.5 rounded-lg text-sm"
+                                                        >
+                                                            Remover
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
