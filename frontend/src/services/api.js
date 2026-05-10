@@ -1,11 +1,33 @@
-// services/api.js
+// frontend/src/services/api.js
+import { apiClient } from "./apiClient";
 
 export async function getExpenses() {
-    const res = await fetch("http://localhost:3000/expenses");
-
-    if (!res.ok) {
-        throw new Error("Erro ao buscar despesas");
-    }
-
-    return res.json();
+  return apiClient.get("/expense");
 }
+
+export async function getTotalExpenses() {
+  return apiClient.get("/expense/total");
+}
+
+export async function getCategories() {
+  return apiClient.get("/categories");
+}
+
+export async function createCategory({ name }) {
+  return apiClient.post("/categories", { name });
+}
+
+export async function getExpensesByCategory() {
+  return apiClient.get("/expense/by-category");
+}
+
+export async function createExpense({ user_id, category_id, title, amount, date }) {
+  return apiClient.post("/expense", {
+    user_id,
+    category_id,
+    title,
+    amount,
+    date,
+  });
+}
+

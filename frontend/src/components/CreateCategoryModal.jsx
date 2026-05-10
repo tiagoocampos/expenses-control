@@ -1,39 +1,20 @@
 import { useState } from "react";
+import { createCategory } from "../services/api";
 
 export function CreateCategoryModal({ isOpen, onClose }) {
 
     const [name, setName] = useState("");
 
-    async function createCategory() {
-
+    async function createCategoryHandler() {
         try {
-
-            const res = await fetch("http://localhost:3000/categories", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: name
-                })
-            });
-
-            const data = await res.json();
-
+            const data = await createCategory({ name });
             alert(data.message);
-
             setName("");
-
             onClose();
-
         } catch (error) {
-
             console.log(error);
-
             alert("Erro ao criar categoria");
-
         }
-
     }
 
     if (!isOpen) return null;
@@ -88,9 +69,10 @@ export function CreateCategoryModal({ isOpen, onClose }) {
 
                         <button
                             type="button"
-                            onClick={createCategory}
+                            onClick={createCategoryHandler}
                             className="flex-1 bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium"
                         >
+
                             Criar categoria
                         </button>
 

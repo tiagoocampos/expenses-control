@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
+import { getExpenses } from "../services/api";
 
 export function ExpenseList() {
     const [expenses, setExpenses] = useState([]);
 
     useEffect(() => {
-        async function getExpenses() {
+        async function load() {
             try {
-                const res = await fetch("http://localhost:3000/expense");
-                const data = await res.json();
+                const data = await getExpenses();
                 setExpenses(data);
-                console.log(data);
             } catch (error) {
                 console.log(error, "Erro ao conectar");
             }
         }
 
-        getExpenses();
+        load();
     }, []);
 
     return (

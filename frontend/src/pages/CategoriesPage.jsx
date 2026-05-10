@@ -3,38 +3,31 @@ import { Link } from "react-router-dom";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
 import { Header } from "../components/Header";
+import { getCategories, getExpensesByCategory } from "../services/api";
 
 export function CategoriesPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-
-
-
     const [categoryList, setCategoryList] = useState([]);
-    async function getCategory() {
-
-        const res = await fetch("http://localhost:3000/categories");
-        const data = await res.json();
-
-        setCategoryList(data);
-
-        console.log(data);
-
-    }
-
     const [expensesByCategory, setExpensesByCategory] = useState([]);
-    async function getExpensesByCategory() {
-        const res = await fetch("http://localhost:3000/expense/by-category");
-        const data = await res.json();
-        setExpensesByCategory(data);
-        console.log(data)
-    }
 
     useEffect(() => {
-        getCategory();
-        getExpensesByCategory();
-    }, []);
+        async function load() {
+            try {
+                const [categories, grouped] = await Promise.all([
+                    getCategories(),
+                    getExpensesByCategory(),
+                ]);
 
+                setCategoryList(categories);
+                setExpensesByCategory(grouped);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        load();
+    }, []);
 
     const selectedCategory = categoryList[0];
     const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategory?.id);

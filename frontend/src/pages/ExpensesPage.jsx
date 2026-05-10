@@ -3,24 +3,22 @@ import { Card } from "../components/Card";
 import { ExpenseList } from "../components/ExpenseList";
 import { Header } from "../components/Header";
 import { useEffect, useState } from "react";
+import { getTotalExpenses } from "../services/api";
 
 export function ExpensesPage() {
 
     const [totalExpenses, setTotalExpenses] = useState(0);
     useEffect(() => {
-        async function getTotalExpenses() {
+        async function load() {
             try {
-                const res = await fetch("http://localhost:3000/expense/total");
-                const data = await res.json();
-
+                const data = await getTotalExpenses();
                 setTotalExpenses(data.total);
-                console.log(data);
             } catch (error) {
                 console.log(error);
-                console.log("Erro ao calcular o total de gastos")
+                console.log("Erro ao calcular o total de gastos");
             }
         }
-        getTotalExpenses();
+        load();
     }, [])
 
     return (

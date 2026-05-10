@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CreateCategoryModal } from "./CreateCategoryModal";
 import { Link } from "react-router-dom";
+import { createExpense, getCategories } from "../services/api";
 
 export function ExpenseForm() {
 
@@ -17,54 +18,30 @@ export function ExpenseForm() {
         )
     }
 
-    async function getCategory() {
-
-        const res = await fetch("http://localhost:3000/categories");
-        const data = await res.json();
-
-        setCategoryList(data);
-
-        console.log(data);
-
-    }
-
     useEffect(() => {
-        getCategory();
+        async function loadCategories() {
+            const data = await getCategories();
+            setCategoryList(data);
+        }
+
+        loadCategories();
     }, []);
 
     async function addExpense() {
-
         try {
-
-            const res = await fetch("http://localhost:3000/expense", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    user_id: 1,
-                    category_id: Number(category),
-                    title: title,
-                    amount: Number(amount),
-                    date: date
-                })
+            const data = await createExpense({
+                user_id: 1,
+                category_id: Number(category),
+                title,
+                amount: Number(amount),
+                date,
             });
 
-            const data = await res.json();
-
             alert(data.message);
-
-            console.log(data.message);
-
         } catch (error) {
-
             console.log(error);
-
             alert("Erro ao salvar despesa");
-
         }
-
     }
 
     return (
