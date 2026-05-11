@@ -3,7 +3,8 @@ import { CircleDollarSign } from "lucide-react";
 
 export function Header() {
     const location = useLocation();
-    const isDespesas = location.pathname === "/" || location.pathname === "/despesas";
+    const isHomePage = location.pathname === "/"
+    const isCategories = location.pathname === "/categories"
 
     return (
         <div className="bg-gray-950 border-b border-gray-800">
@@ -21,13 +22,17 @@ export function Header() {
                     <li>
                         <Link
                             to="/"
-                            className={isDespesas ? "text-green-400 font-medium" : "text-gray-300 hover:text-white"}
+                            className={isHomePage ? "text-green-400 font-medium" : "text-gray-300 hover:text-white"}
                         >
-                            Despesas
+                            Página inicial
                         </Link>
                     </li>
 
-                    <li className={"text-gray-300"}><Link to="/categories">Categorias</Link></li>
+                    <li className={"text-gray-300"}>
+                        <Link to="/categories"
+                            className={isCategories ? "text-green-400 font-medium " : "text-gray-300 hover:text-white"}
+                        >Categorias</Link>
+                    </li>
                 </ul>
             </div>
         </div>

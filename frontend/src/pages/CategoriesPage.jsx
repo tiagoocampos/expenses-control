@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
 import { Header } from "../components/Header";
-import { getCategories, getExpensesByCategory } from "../services/api";
+import { deleteExpense, getCategories, getExpenses, getExpensesByCategory } from "../services/api";
 
 export function CategoriesPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [id, setId] = useState(null);
 
     const [categoryList, setCategoryList] = useState([]);
     const [expensesByCategory, setExpensesByCategory] = useState([]);
+
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
     useEffect(() => {
         async function load() {
@@ -17,20 +20,55 @@ export function CategoriesPage() {
                 const [categories, grouped] = await Promise.all([
                     getCategories(),
                     getExpensesByCategory(),
+
                 ]);
 
                 setCategoryList(categories);
                 setExpensesByCategory(grouped);
+                if (categories?.length > 0 && selectedCategoryId === null) {
+                    setSelectedCategoryId(categories[0].id);
+                }
             } catch (e) {
                 console.log(e);
+            }
+
+
+        }
+
+        async function loadExpenses() {
+            try {
+                const data = await getExpenses();
+                setId(data[0].id);
+                console.log(data)
+            } catch (error) {
+                console.log(error);
+                console.log("Erro ao buscar gastos")
             }
         }
 
         load();
+        loadExpenses();
     }, []);
 
-    const selectedCategory = categoryList[0];
-    const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategory?.id);
+    async function deleteExpenseById(expenseId) {
+
+        try {
+            const data = await deleteExpense({ id: expenseId });
+            alert(data?.message || "Gasto excluído com sucesso")
+
+            const grouped = await getExpensesByCategory();
+            setExpensesByCategory(grouped);
+        } catch (error) {
+            console.log(error);
+            alert("Erro ao excluir gasto")
+        }
+    }
+
+
+
+    const selectedCategory = categoryList.find((c) => c.id === selectedCategoryId);
+
+    const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategoryId);
     return (
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
@@ -60,44 +98,50 @@ export function CategoriesPage() {
                         </div>
 
                         <div className="space-y-2">
-                            {categoryList.map((c) => (
+                            <div className="max-h-50 overflow-y-auto pr-1">
+                                <div className="space-y-2 p-2">
+                                    {categoryList.map((c) => (
 
 
-                                <button
-                                    key={c.id}
-                                    type="button"
-                                    className={
-                                        "w-full text-left cursor-pointer bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3" +
-                                        (c.id === selectedCategory?.id
-                                            ? " ring-1 ring-green-600"
-                                            : "")
-                                    }
-                                >
-                                    <div className="flex items-start justify-between  gap-3">
-                                        <div>
-                                            <div className="font-medium">{c.name}</div>
-                                            <div className="text-gray-400 text-xs mt-1">
-                                                {expensesByCategory.find((x) => x.category_id === c.id)?.expenses?.length ?? 0} gastos
+                                        <button
+                                            key={c.id}
+                                            type="button"
+                                            onClick={() => setSelectedCategoryId(c.id)}
+                                            className={
+                                                "w-full text-left cursor-pointer bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3" +
+                                                (c.id === selectedCategory?.id
+                                                    ? " ring-1 ring-green-600"
+                                                    : "")
+                                            }
+                                        >
+                                            <div className="flex items-start justify-between  gap-3">
+                                                <div>
+                                                    <div className="font-medium">{c.name}</div>
+                                                    <div className="text-gray-400 text-xs mt-1">
+                                                        {expensesByCategory.find((x) => x.category_id === c.id)?.expenses?.length ?? 0} gastos
+                                                    </div>
+
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        type="button"
+                                                        className="bg-gray-800 hover:bg-gray-700 transition-colors px-2 py-1 rounded-lg text-xs"
+                                                    >
+                                                        Editar
+                                                    </button>
+                                                    <button
+                                                        type="button"
+
+                                                        className="bg-red-600 hover:bg-red-500 transition-colors px-2 py-1 rounded-lg text-xs"
+                                                    >
+                                                        Excluir categoria
+                                                    </button>
+                                                </div>
                                             </div>
-
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <button
-                                                type="button"
-                                                className="bg-gray-800 hover:bg-gray-700 transition-colors px-2 py-1 rounded-lg text-xs"
-                                            >
-                                                Editar
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="bg-red-600 hover:bg-red-500 transition-colors px-2 py-1 rounded-lg text-xs"
-                                            >
-                                                Remover
-                                            </button>
-                                        </div>
-                                    </div>
-                                </button>
-                            ))}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="mt-4">
@@ -164,6 +208,7 @@ export function CategoriesPage() {
 
                                                         <button
                                                             type="button"
+                                                            onClick={() => deleteExpenseById(expense.id)}
                                                             className="bg-red-600 hover:bg-red-500 transition-colors px-3 py-1.5 rounded-lg text-sm"
                                                         >
                                                             Remover
@@ -184,13 +229,13 @@ export function CategoriesPage() {
                         </Card>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <CreateCategoryModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
             />
-        </div>
+        </div >
     );
 }
 

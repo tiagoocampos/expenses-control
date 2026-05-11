@@ -111,3 +111,21 @@ export function getExpensesByCategory(req, res) {
         return res.status(200).json(Array.from(grouped.values()))
     })
 }
+
+export function deleteExpense(req, res){
+  const { id } = req.params;
+  const sql = "DELETE FROM expenses WHERE id = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Erro ao deletar gasto" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Gasto não encontrado" });
+    }
+
+    return res.status(200).json({ message: "Gasto deletado com sucesso" });
+  });
+}

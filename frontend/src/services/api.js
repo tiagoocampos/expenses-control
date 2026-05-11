@@ -31,3 +31,8 @@ export async function createExpense({ user_id, category_id, title, amount, date 
   });
 }
 
+export async function deleteExpense({ id }){
+  return apiClient.delete(`/expense/delete-expense/${id}`);
+}
+
+

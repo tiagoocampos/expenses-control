@@ -34,5 +34,11 @@ export const apiClient = {
       },
       body: JSON.stringify(body),
     }),
+  delete: (path) => request(path, { method: "DELETE" }),
 };
+
+
+
+
+
 

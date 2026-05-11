@@ -32,9 +32,9 @@ export function ExpenseForm() {
             const data = await createExpense({
                 user_id: 1,
                 category_id: Number(category),
-                title,
+                title: title,
                 amount: Number(amount),
-                date,
+                date: date,
             });
 
             alert(data.message);
@@ -123,10 +123,6 @@ export function ExpenseForm() {
                         <option className="bg-green-500" value="create">
                             + Criar nova
                         </option>
-
-
-
-
 
                     </select>
 
