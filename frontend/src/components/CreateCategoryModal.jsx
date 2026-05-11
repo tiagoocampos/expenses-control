@@ -6,6 +6,11 @@ export function CreateCategoryModal({ isOpen, onClose }) {
     const [name, setName] = useState("");
 
     async function createCategoryHandler() {
+        if (!name) {
+            alert("Digite o nome da categoria!");
+            return;
+        }
+
         try {
             const data = await createCategory({ name });
             alert(data.message);

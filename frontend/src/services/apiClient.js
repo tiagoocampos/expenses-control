@@ -1,4 +1,4 @@
-// frontend/src/services/apiClient.js
+
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -10,13 +10,13 @@ async function request(path, { method = "GET", headers, body } = {}) {
   });
 
   if (!res.ok) {
-    // tenta extrair mensagem do backend; senão, usa status
+
     let message = `Request failed with status ${res.status}`;
     try {
       const data = await res.json();
       message = data?.message || message;
     } catch (_) {
-      // ignore
+     
     }
     throw new Error(message);
   }

@@ -1,4 +1,4 @@
-// frontend/src/services/api.js
+
 import { apiClient } from "./apiClient";
 
 export async function getExpenses() {
