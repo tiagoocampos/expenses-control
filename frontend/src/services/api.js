@@ -35,4 +35,8 @@ export async function deleteExpense({ id }){
   return apiClient.delete(`/expense/delete-expense/${id}`);
 }
 
+export async function deleteCategory({ id }){
+  return apiClient.delete(`/categories/delete-category/${id}`);
+}
+
 

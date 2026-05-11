@@ -45,7 +45,7 @@ export function ExpensesPage() {
 
                     <Card>
                         <div className="text-gray-400">Resumo</div>
-                        <div className="mt-2 text-gray-200">Mock</div>
+                        <div className="mt-2 text-gray-200">Em breve</div>
                     </Card>
                 </div>
 

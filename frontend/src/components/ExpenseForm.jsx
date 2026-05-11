@@ -6,7 +6,7 @@ import { createExpense, getCategories } from "../services/api";
 export function ExpenseForm() {
 
     const [title, setTitle] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(null);
     const [category, setCategory] = useState("");
     const [date, setDate] = useState("");
     const [categoryList, setCategoryList] = useState([]);
@@ -28,6 +28,10 @@ export function ExpenseForm() {
     }, []);
 
     async function addExpense() {
+        if (!title || !amount || !category || !date) {
+            alert("Preencha os campos corretamente");
+            return;
+        }
         try {
             const data = await createExpense({
                 user_id: 1,
@@ -41,7 +45,19 @@ export function ExpenseForm() {
         } catch (error) {
             console.log(error);
             alert("Erro ao salvar despesa");
+        } finally {
+            setTitle("");
+            setAmount(0);
+            setCategory("");
+            setDate("");
         }
+    }
+
+    async function clearForm() {
+        setTitle("");
+        setAmount(0);
+        setCategory("");
+        setDate("");
     }
 
     return (
@@ -160,6 +176,7 @@ export function ExpenseForm() {
 
                     <button
                         type="button"
+                        onClick={() => clearForm()}
                         className="flex-1 bg-gray-800 hover:bg-gray-700 transition-colors px-4 py-2 rounded-lg"
                     >
                         Cancelar

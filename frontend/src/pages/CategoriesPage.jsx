@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
 import { Header } from "../components/Header";
-import { deleteExpense, getCategories, getExpenses, getExpensesByCategory } from "../services/api";
+import { deleteCategory, deleteExpense, getCategories, getExpenses, getExpensesByCategory } from "../services/api";
 
 export function CategoriesPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -66,7 +66,29 @@ export function CategoriesPage() {
 
 
 
+
+
     const selectedCategory = categoryList.find((c) => c.id === selectedCategoryId);
+
+    async function deleteCategoryById(categoryId) {
+        try {
+            const data = await deleteCategory({ id: categoryId });
+            alert(data?.message || "Categoria excluída com sucesso");
+            const categories = await getCategories();
+            setCategoryList(categories)
+
+            const grouped = await getExpensesByCategory();
+            setExpensesByCategory(grouped)
+
+            if (selectedCategoryId === categoryId) {
+                setSelectedCategoryId(categories?.[0]?.id ?? null)
+            }
+
+        } catch (error) {
+            console.log(error);
+            alert("Erro ao deletar categoria")
+        }
+    }
 
     const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategoryId);
     return (
@@ -97,10 +119,11 @@ export function CategoriesPage() {
                             <div className="text-gray-200 mt-1 text-sm">Selecione para ver os gastos</div>
                         </div>
 
-                        <div className="space-y-2">
-                            <div className="max-h-50 overflow-y-auto pr-1">
-                                <div className="space-y-2 p-2">
+                        <div className="space-y-2 ">
+                            <div className="max-h-80 overflow-y-auto pr-1 py-2">
+                                <div className="space-y-2">
                                     {categoryList.map((c) => (
+
 
 
                                         <button
@@ -110,7 +133,7 @@ export function CategoriesPage() {
                                             className={
                                                 "w-full text-left cursor-pointer bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3" +
                                                 (c.id === selectedCategory?.id
-                                                    ? " ring-1 ring-green-600"
+                                                    ? " bg-green-950"
                                                     : "")
                                             }
                                         >
@@ -131,7 +154,7 @@ export function CategoriesPage() {
                                                     </button>
                                                     <button
                                                         type="button"
-
+                                                        onClick={() => deleteCategoryById(c.id)}
                                                         className="bg-red-600 hover:bg-red-500 transition-colors px-2 py-1 rounded-lg text-xs"
                                                     >
                                                         Excluir categoria

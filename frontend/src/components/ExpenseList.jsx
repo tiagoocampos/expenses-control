@@ -30,18 +30,26 @@ export function ExpenseList() {
                 </thead>
 
                 <tbody>
-                    {expenses.map((expense) => (
-                        <tr key={expense.id} className="border-b border-gray-700">
-                            <td className="py-2">{expense.title || "Nenhuma despesa cadastrada"}</td>
-                            <td className="py-2">
-                                R$ {Number(expense.amount).toFixed(2).replace(".", ",")}
-                            </td>
-                            <td className="py-2">{expense.category_name}</td>
-                            <td className="py-2">
-                                {new Date(expense.date).toLocaleDateString("pt-BR")}
+                    {expenses.length === 0 ? (
+                        <tr className="border-b border-gray-700">
+                            <td className="py-3 text-gray-400" colSpan={4}>
+                                Nenhuma despesa cadastrada
                             </td>
                         </tr>
-                    ))}
+                    ) :
+
+                        expenses.map((expense) => (
+                            <tr key={expense.id} className="border-b border-gray-700">
+                                <td className="py-2">{expense.title || "Nenhuma despesa cadastrada"}</td>
+                                <td className="py-2">
+                                    R$ {Number(expense.amount).toFixed(2).replace(".", ",")}
+                                </td>
+                                <td className="py-2">{expense.category_name}</td>
+                                <td className="py-2">
+                                    {new Date(expense.date).toLocaleDateString("pt-BR")}
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
 
             </table>
