@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { createCategory } from "../services/api";
 
+
+
+
 export function CreateCategoryModal({ isOpen, onClose }) {
 
     const [name, setName] = useState("");
 
     async function createCategoryHandler() {
         if (!name) {
-            alert("Digite o nome da categoria!");
+
+
             return;
         }
 
