@@ -140,50 +140,56 @@ export function CategoriesPage() {
                         </div>
 
                         <div className="max-h-80 overflow-y-auto pr-1 space-y-2">
-                            {categoryList.map((c) => (
-                                <button
-                                    key={c.id}
-                                    type="button"
-                                    onClick={() => setSelectedCategoryId(c.id)}
-                                    className={`w-full text-left border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3 ${c.id === selectedCategory?.id
-                                        ? "bg-gray-800"
-                                        : "bg-gray-900"
-                                        }`}
-                                >
-                                    <div className="flex items-start justify-between gap-3">
+                            {categoryList.length === 0 ? (
+                                <div className="text-gray-400 text-sm mt-2 p-2 rounded-lg border border-gray-800 bg-gray-900/50">
+                                    Nenhuma categoria cadastrada ainda
+                                </div>
+                            ) : (
+                                categoryList.map((c) => (
+                                    <button
+                                        key={c.id}
+                                        type="button"
+                                        onClick={() => setSelectedCategoryId(c.id)}
+                                        className={`w-full text-left border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3 ${c.id === selectedCategory?.id
+                                            ? "bg-gray-800"
+                                            : "bg-gray-900"
+                                            }`}
+                                    >
+                                        <div className="flex items-start justify-between gap-3">
 
-                                        <div className="min-w-0">
-                                            <div className="font-medium truncate">
-                                                {c.name}
+                                            <div className="min-w-0">
+                                                <div className="font-medium truncate">
+                                                    {c.name}
+                                                </div>
+                                                <div className="text-gray-400 text-xs mt-1">
+                                                    {expensesByCategory.find(
+                                                        (x) => x.category_id === c.id
+                                                    )?.expenses?.length ?? 0}{" "}
+                                                    gastos
+                                                </div>
                                             </div>
-                                            <div className="text-gray-400 text-xs mt-1">
-                                                {expensesByCategory.find(
-                                                    (x) => x.category_id === c.id
-                                                )?.expenses?.length ?? 0}{" "}
-                                                gastos
+
+
+                                            <div className="flex flex-col gap-2 shrink-0 w-[110px]">
+                                                <button
+                                                    type="button"
+                                                    className="w-full bg-blue-600 cursor-pointer hover:bg-blue-400 transition-colors px-2 py-1 rounded-lg text-xs"
+                                                >
+                                                    Editar
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => openDeleteModal(c)}
+                                                    className="w-full bg-red-600 cursor-pointer hover:bg-red-400 transition-colors px-2 py-1 rounded-lg text-xs"
+                                                >
+                                                    Excluir
+                                                </button>
                                             </div>
                                         </div>
-
-
-                                        <div className="flex flex-col gap-2 shrink-0 w-[110px]">
-                                            <button
-                                                type="button"
-                                                className="w-full bg-blue-600 cursor-pointer hover:bg-blue-400 transition-colors px-2 py-1 rounded-lg text-xs"
-                                            >
-                                                Editar
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => openDeleteModal(c)}
-                                                className="w-full bg-red-600 cursor-pointer hover:bg-red-400 transition-colors px-2 py-1 rounded-lg text-xs"
-                                            >
-                                                Excluir
-                                            </button>
-                                        </div>
-                                    </div>
-                                </button>
-                            ))}
+                                    </button>
+                                ))
+                            )}
                         </div>
 
                         <div className="mt-4">
@@ -219,34 +225,42 @@ export function CategoriesPage() {
                                     </thead>
 
                                     <tbody>
-                                        {selectedCategoryExpenses?.expenses?.map((expense) => (
-                                            <tr key={expense.id} className="border-b border-gray-700">
-                                                <td className="py-3 pr-2">
-                                                    <div className="max-w-[180px] sm:max-w-[220px] truncate">{expense.title}</div>
-                                                </td>
-
-                                                <td className="py-3 text-sm">R$ {expense.amount}</td>
-
-                                                <td className="py-3 text-sm">
-                                                    {new Date(expense.date).toLocaleDateString("pt-BR")}
-                                                </td>
-
-                                                <td className="py-3 text-sm">
-                                                    <div className="flex gap-2">
-                                                        <button className="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm">
-                                                            Editar
-                                                        </button>
-
-                                                        <button
-                                                            onClick={() => deleteExpenseById(expense.id)}
-                                                            className="bg-red-600 hover:bg-red-500 px-3 py-2 rounded-lg text-xs sm:text-sm"
-                                                        >
-                                                            Remover
-                                                        </button>
-                                                    </div>
+                                        {selectedCategoryExpenses?.expenses?.length === 0 || !selectedCategoryExpenses?.expenses ? (
+                                            <tr className="border-b border-gray-700">
+                                                <td className="py-3 text-gray-400 text-sm" colSpan={4}>
+                                                    Nada registrado até o momento
                                                 </td>
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            selectedCategoryExpenses?.expenses?.map((expense) => (
+                                                <tr key={expense.id} className="border-b border-gray-700">
+                                                    <td className="py-3 pr-2">
+                                                        <div className="max-w-[180px] sm:max-w-[220px] truncate">{expense.title}</div>
+                                                    </td>
+
+                                                    <td className="py-3 text-sm">R$ {expense.amount}</td>
+
+                                                    <td className="py-3 text-sm">
+                                                        {new Date(expense.date).toLocaleDateString("pt-BR")}
+                                                    </td>
+
+                                                    <td className="py-3 text-sm">
+                                                        <div className="flex gap-2">
+                                                            <button className="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm">
+                                                                Editar
+                                                            </button>
+
+                                                            <button
+                                                                onClick={() => deleteExpenseById(expense.id)}
+                                                                className="bg-red-600 hover:bg-red-500 px-3 py-2 rounded-lg text-xs sm:text-sm"
+                                                            >
+                                                                Remover
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
 
                                     </tbody>
                                 </table>

@@ -51,7 +51,7 @@ export function DeleteCategoryModal({
                     <p className="text-gray-300 text-sm leading-relaxed">
                         Removendo esta categoria,
                         {category?.name ? ` "${category.name}"` : ""}, você irá remover junto todas as despesas cadastradas nela,
-                        tem certeza que desejá excluir?
+                        tem certeza que deseja excluir?
                         {typeof expensesCount === "number" ? (
                             <span className="block text-gray-400 mt-2">
                                 Total de despesas na categoria: <span className="text-gray-200">{expensesCount}</span>

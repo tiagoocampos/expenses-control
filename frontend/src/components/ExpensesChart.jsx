@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Card } from "./Card";
 import { getExpensesByCategory } from "../services/api";
+import { Link } from "react-router-dom";
 
 
 const COLORS = [
@@ -86,7 +87,8 @@ export function ExpensesChart() {
     if (!chartData.length) {
         return (
             <Card>
-                <div className="text-gray-400">Nenhuma despesa cadastrada por categoria</div>
+                <div className="flex flex-col gap-5 text-gray-400">
+                    <h1>Gráfico de despesas</h1><p>Aqui será exibido o gráfico das suas despesas. <br></br> <Link className="text-green-400 hover:text-green-200" to="/despesas">Adicione uma despesa</Link> para monitorar seus gastos.</p></div>
             </Card>
         );
     }
@@ -96,7 +98,7 @@ export function ExpensesChart() {
             <div className="flex items-center justify-between gap-4 mb-4">
                 <div>
                     <div className="text-gray-400 text-sm">Distribuição por categoria</div>
-                    <div className="text-sm text-gray-200 mt-1">Atualiza conforme suas despesas</div>
+                    <div className="text-sm text-gray-200 mt-1">Acompanhe o gráfico das suas despesas</div>
                 </div>
                 <div className="text-right">
                     <div className="text-gray-400 text-xs">Total</div>
