@@ -60,7 +60,7 @@ export function ExpenseForm() {
                 <div>
                     <label className="block text-sm text-gray-300 mb-1">Descrição</label>
                     <input
-                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600"
+                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600 text-sm sm:text-base"
                         placeholder="Ex: Mercado"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
@@ -70,9 +70,9 @@ export function ExpenseForm() {
                 <div>
                     <label className="block text-sm text-gray-300 mb-1">Valor</label>
                     <div className="flex items-center">
-                        <span className="bg-gray-900 border border-gray-800 rounded-l-lg px-3 py-2 text-gray-400">R$</span>
+                        <span className="bg-gray-900 border border-gray-800 rounded-l-lg px-3 py-2 text-gray-400 text-sm sm:text-base">R$</span>
                         <input
-                            className="w-full bg-gray-950 border border-gray-800 border-l-0 rounded-r-lg px-3 py-2 outline-none focus:border-green-600"
+                            className="w-full bg-gray-950 border border-gray-800 border-l-0 rounded-r-lg px-3 py-2 outline-none focus:border-green-600 text-sm sm:text-base"
                             placeholder="0,00"
                             inputMode="decimal"
                             value={amount}
@@ -93,7 +93,7 @@ export function ExpenseForm() {
                             }
                             setCategory(value);
                         }}
-                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600"
+                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600 text-sm sm:text-base"
                     >
                         <option value="">Selecione uma categoria</option>
                         {categoryList.map((c) => (
@@ -113,23 +113,23 @@ export function ExpenseForm() {
                         type="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600"
+                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600 text-sm sm:text-base"
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm text-gray-300 mb-1">Observação</label>
                     <textarea
-                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600 min-h-22.5"
+                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600 min-h-24 text-sm sm:text-base"
                         placeholder="Opcional"
                     />
                 </div>
 
-                <div className="flex gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <button
                         type="button"
                         onClick={clearForm}
-                        className="flex-1 bg-gray-800 hover:bg-gray-700 transition-colors px-4 py-2 rounded-lg"
+                        className="flex-1 bg-gray-800 hover:bg-gray-700 transition-colors px-4 py-3 rounded-lg text-sm sm:text-base"
                     >
                         Cancelar
                     </button>
@@ -137,12 +137,13 @@ export function ExpenseForm() {
                     <button
                         type="button"
                         onClick={addExpense}
-                        className="flex-1 bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium"
+                        className="flex-1 bg-green-600 hover:bg-green-500 transition-colors px-4 py-3 rounded-lg font-medium text-sm sm:text-base"
                     >
                         Salvar despesa
                     </button>
                 </div>
             </form>
+
 
             <CreateCategoryModal
                 isOpen={isModalOpen}

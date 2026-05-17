@@ -36,20 +36,22 @@ export function CreateCategoryModal({ isOpen, onClose }) {
 
             <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-2xl">
 
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-5">
 
-                    <h2 className="text-xl font-semibold text-white">
+                    <h2 className="text-lg sm:text-xl font-semibold text-white">
                         Nova Categoria
                     </h2>
 
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="text-gray-400 hover:text-white transition-colors p-2 -m-2 rounded-lg"
+                        aria-label="Fechar"
                     >
                         ✕
                     </button>
 
                 </div>
+
 
                 <div className="space-y-4">
 

@@ -1,10 +1,12 @@
-## TODO - expenses-control
+# TODO
 
-- [x] Entender e implementar modal de confirmação para exclusão de categoria
-  - [ ] Atualizar `frontend/src/components/DeleteCategoryModal.jsx` com UI inspirada em `CreateCategoryModal.jsx`
-  - [ ] Implementar lógica: ao clicar “Sim” chamar API `deleteCategory({ id })` e atualizar listas
-  - [ ] Atualizar texto de confirmação conforme pedido
-  - [ ] Ajustar `frontend/src/pages/CategoriesPage.jsx` para abrir `DeleteCategoryModal` ao clicar em “Excluir categoria”
-  - [ ] Passar dados `{ id, name }` (e `expensesCount` opcional) para o modal
-  - [ ] Remover/retirar chamada direta de delete da página e delegar ao modal
-  - [ ] Testar fluxos: abrir modal, cancelar, deletar, atualizar estado
+## Mobile responsiveness (UI/UX only)
+- [x] Atualizar `Header` com menu hamburguer usando `Sheet` (concluído)
+
+- [ ] Ajustar páginas (`ExpensesPage`, `CategoriesPage`, `AddExpensePage`) para mobile-first sem overflow
+- [ ] Tornar grids mais responsivos (usar `sm:`, `md:` quando fizer sentido)
+- [x] Melhorar responsividade de tabelas (scroll, tamanho de fonte, truncamento)
+
+- [ ] Ajustar tipografia/spacing e botões para toque (mínimo de padding e wrapping)
+- [ ] Validar build do frontend
+

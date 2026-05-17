@@ -110,12 +110,11 @@ export function CategoriesPage() {
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
 
-            <div className="max-w-5xl mx-auto px-4 py-8">
-                {/* Header */}
-                <div className="flex items-end justify-between gap-6 mb-6">
-                    <div>
-                        <h1 className="text-3xl font-bold">Categorias</h1>
-                        <p className="text-gray-400">
+            <div className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div className="min-w-0">
+                        <h1 className="text-2xl sm:text-3xl font-bold">Categorias</h1>
+                        <p className="text-gray-400 text-sm sm:text-base">
                             Gerencie suas categorias e visualize os gastos de cada uma
                         </p>
                     </div>
@@ -123,7 +122,7 @@ export function CategoriesPage() {
                     <button
                         type="button"
                         onClick={() => setIsCreateModalOpen(true)}
-                        className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium"
+                        className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base text-center"
                     >
                         + Nova categoria
                     </button>
@@ -132,6 +131,7 @@ export function CategoriesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
                     <Card>
+
                         <div className="mb-4">
                             <div className="text-gray-400 text-sm">Categorias</div>
                             <div className="text-gray-200 mt-1 text-sm">
@@ -199,19 +199,16 @@ export function CategoriesPage() {
 
                     <div className="lg:col-span-2">
                         <Card>
-                            <div className="flex items-end justify-between gap-4 mb-4">
-                                <div>
-                                    <div className="text-gray-400 text-sm">
-                                        Gastos da categoria
-                                    </div>
-                                    <div className="text-2xl font-bold mt-1">
-                                        {selectedCategory?.name}
-                                    </div>
+                            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-4">
+                                <div className="min-w-0">
+                                    <div className="text-gray-400 text-sm">Gastos da categoria</div>
+                                    <div className="text-lg sm:text-2xl font-bold mt-1 truncate">{selectedCategory?.name}</div>
                                 </div>
                             </div>
 
                             <div className="overflow-x-auto">
-                                <table className="w-full text-left">
+                                <table className="w-full text-left min-w-[520px]">
+
                                     <thead>
                                         <tr className="text-gray-400 text-sm">
                                             <th className="pb-2">Descrição</th>
@@ -224,23 +221,25 @@ export function CategoriesPage() {
                                     <tbody>
                                         {selectedCategoryExpenses?.expenses?.map((expense) => (
                                             <tr key={expense.id} className="border-b border-gray-700">
-                                                <td className="py-3">{expense.title}</td>
+                                                <td className="py-3 pr-2">
+                                                    <div className="max-w-[180px] sm:max-w-[220px] truncate">{expense.title}</div>
+                                                </td>
 
-                                                <td className="py-3">R$ {expense.amount}</td>
+                                                <td className="py-3 text-sm">R$ {expense.amount}</td>
 
-                                                <td className="py-3">
+                                                <td className="py-3 text-sm">
                                                     {new Date(expense.date).toLocaleDateString("pt-BR")}
                                                 </td>
 
-                                                <td className="py-3">
+                                                <td className="py-3 text-sm">
                                                     <div className="flex gap-2">
-                                                        <button className="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-sm">
+                                                        <button className="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm">
                                                             Editar
                                                         </button>
 
                                                         <button
                                                             onClick={() => deleteExpenseById(expense.id)}
-                                                            className="bg-red-600 hover:bg-red-500 px-3 py-1.5 rounded-lg text-sm"
+                                                            className="bg-red-600 hover:bg-red-500 px-3 py-2 rounded-lg text-xs sm:text-sm"
                                                         >
                                                             Remover
                                                         </button>
@@ -248,6 +247,7 @@ export function CategoriesPage() {
                                                 </td>
                                             </tr>
                                         ))}
+
                                     </tbody>
                                 </table>
                             </div>

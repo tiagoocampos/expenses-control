@@ -26,14 +26,17 @@ export function ExpensesPage() {
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
 
-            <div className="max-w-5xl mx-auto px-4 py-8">
-                <div className="flex items-end justify-between gap-6 mb-6">
-                    <div>
-                        <h1 className="text-3xl font-bold">Gastos</h1>
-                        <p className="text-gray-400">Acompanhe e gerencie todas as suas despesas</p>
+            <div className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div className="min-w-0">
+                        <h1 className="text-2xl sm:text-3xl font-bold">Gastos</h1>
+                        <p className="text-gray-400 text-sm sm:text-base">Acompanhe e gerencie todas as suas despesas</p>
                     </div>
 
-                    <Link to="/despesas" className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium">
+                    <Link
+                        to="/despesas"
+                        className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base text-center"
+                    >
                         + Adicionar despesa
                     </Link>
                 </div>
@@ -41,8 +44,8 @@ export function ExpensesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
                     <div className="lg:col-span-1">
                         <Card>
-                            <div className="text-gray-400">Total de gastos</div>
-                            <div className="text-4xl font-bold mt-1 text-green-300">
+                            <div className="text-gray-400 text-sm">Total de gastos</div>
+                            <div className="text-3xl sm:text-4xl font-bold mt-1 text-green-300 break-words">
                                 {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalExpenses)}
                             </div>
                         </Card>
@@ -53,10 +56,11 @@ export function ExpensesPage() {
                     </div>
                 </div>
 
-                <div className="bg-gray-900 rounded-xl shadow-sm p-4">
+                <div className="bg-gray-900 rounded-xl shadow-sm p-3 sm:p-4">
                     <ExpenseList />
                 </div>
             </div>
+
         </div>
     );
 }

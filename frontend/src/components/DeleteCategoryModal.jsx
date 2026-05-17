@@ -33,17 +33,19 @@ export function DeleteCategoryModal({
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
             <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-2xl">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-white">Excluir categoria</h2>
+                <div className="flex items-center justify-between mb-5 gap-3">
+                    <h2 className="text-lg sm:text-xl font-semibold text-white">Excluir categoria</h2>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="text-gray-400 hover:text-white transition-colors p-2 -m-2 rounded-lg"
                         disabled={isDeleting}
+                        aria-label="Fechar"
                     >
                         ✕
                     </button>
                 </div>
+
 
                 <div className="space-y-4">
                     <p className="text-gray-300 text-sm leading-relaxed">
