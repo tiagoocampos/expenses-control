@@ -15,8 +15,8 @@ async function request(path, { method = "GET", headers, body } = {}) {
     try {
       const data = await res.json();
       message = data?.message || message;
-    } catch (_) {
-     
+    } catch (e) {
+      message = message;
     }
     throw new Error(message);
   }

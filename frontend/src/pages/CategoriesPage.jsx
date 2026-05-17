@@ -5,12 +5,15 @@ import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
 import { DeleteCategoryModal } from "../components/DeleteCategoryModal";
 import { Header } from "../components/Header";
-import { deleteExpense, getCategories, getExpenses, getExpensesByCategory } from "../services/api";
-
+import {
+    deleteExpense,
+    getCategories,
+    getExpenses,
+    getExpensesByCategory,
+} from "../services/api";
 
 export function CategoriesPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
 
     const [categoryList, setCategoryList] = useState([]);
     const [expensesByCategory, setExpensesByCategory] = useState([]);
@@ -27,31 +30,25 @@ export function CategoriesPage() {
                 const [categories, grouped] = await Promise.all([
                     getCategories(),
                     getExpensesByCategory(),
-
                 ]);
 
                 setCategoryList(categories);
                 setExpensesByCategory(grouped);
+
                 if (categories?.length > 0 && selectedCategoryId === null) {
                     setSelectedCategoryId(categories[0].id);
                 }
             } catch (e) {
                 console.log(e);
             }
-
-
         }
 
         async function loadExpenses() {
-            // mantido apenas para compatibilidade com o layout atual
-
             try {
                 const data = await getExpenses();
-
-                console.log(data)
+                console.log(data);
             } catch (error) {
                 console.log(error);
-                console.log("Erro ao buscar gastos")
             }
         }
 
@@ -60,11 +57,9 @@ export function CategoriesPage() {
     }, []);
 
     async function deleteExpenseById(expenseId) {
-
         try {
             const data = await deleteExpense({ id: expenseId });
             toast.success(data?.message || "Gasto excluído com sucesso");
-
 
             const grouped = await getExpensesByCategory();
             setExpensesByCategory(grouped);
@@ -72,20 +67,22 @@ export function CategoriesPage() {
             console.log(error);
             toast.error("Erro ao excluir gasto");
         }
-
     }
 
+    const selectedCategory = categoryList.find(
+        (c) => c.id === selectedCategoryId
+    );
 
-
-
-
-    const selectedCategory = categoryList.find((c) => c.id === selectedCategoryId);
-
-    // const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategoryId);
+    const selectedCategoryExpenses = expensesByCategory.find(
+        (category) => category.category_id === selectedCategoryId
+    );
 
     async function refreshCategoriesAndExpenses() {
         try {
-            const [categories, grouped] = await Promise.all([getCategories(), getExpensesByCategory()]);
+            const [categories, grouped] = await Promise.all([
+                getCategories(),
+                getExpensesByCategory(),
+            ]);
 
             setCategoryList(categories);
             setExpensesByCategory(grouped);
@@ -101,24 +98,26 @@ export function CategoriesPage() {
     function openDeleteModal(category) {
         setCategoryToDelete(category);
 
-        const count = expensesByCategory?.find((x) => x.category_id === category?.id)?.expenses?.length ?? 0;
-        setExpensesCountToDelete(count);
+        const count =
+            expensesByCategory?.find((x) => x.category_id === category?.id)
+                ?.expenses?.length ?? 0;
 
+        setExpensesCountToDelete(count);
         setIsDeleteModalOpen(true);
     }
-
-    const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategoryId);
 
     return (
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
 
-
             <div className="max-w-5xl mx-auto px-4 py-8">
+                {/* Header */}
                 <div className="flex items-end justify-between gap-6 mb-6">
                     <div>
                         <h1 className="text-3xl font-bold">Categorias</h1>
-                        <p className="text-gray-400">Gerencie suas categorias e visualize os gastos de cada uma</p>
+                        <p className="text-gray-400">
+                            Gerencie suas categorias e visualize os gastos de cada uma
+                        </p>
                     </div>
 
                     <button
@@ -135,79 +134,79 @@ export function CategoriesPage() {
                     <Card>
                         <div className="mb-4">
                             <div className="text-gray-400 text-sm">Categorias</div>
-                            <div className="text-gray-200 mt-1 text-sm">Selecione para ver os gastos</div>
-                        </div>
-
-                        <div className="space-y-2 ">
-                            <div className="max-h-80 overflow-y-auto pr-1 py-2">
-                                <div className="space-y-2">
-
-
-                                    {categoryList.map((c) => (
-
-
-
-                                        <button
-                                            key={c.id}
-                                            type="button"
-                                            onClick={() => setSelectedCategoryId(c.id)}
-                                            className={
-                                                "w-full text-left cursor-pointer bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3" +
-                                                (c.id === selectedCategory?.id
-                                                    ? " bg-green-950"
-                                                    : "")
-                                            }
-                                        >
-                                            <div className="flex items-start justify-between  gap-3">
-                                                <div>
-                                                    <div className="font-medium">{c.name}</div>
-                                                    <div className="text-gray-400 text-xs mt-1">
-                                                        {expensesByCategory.find((x) => x.category_id === c.id)?.expenses?.length ?? 0} gastos
-                                                    </div>
-
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        type="button"
-                                                        className="bg-gray-800 hover:bg-gray-700 transition-colors px-2 py-1 rounded-lg text-xs"
-                                                    >
-                                                        Editar
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => openDeleteModal(c)}
-                                                        className="bg-red-600 hover:bg-red-500 transition-colors px-2 py-1 rounded-lg text-xs"
-                                                    >
-                                                        Excluir categoria
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
+                            <div className="text-gray-200 mt-1 text-sm">
+                                Selecione para ver os gastos
                             </div>
                         </div>
 
+                        <div className="max-h-80 overflow-y-auto pr-1 space-y-2">
+                            {categoryList.map((c) => (
+                                <button
+                                    key={c.id}
+                                    type="button"
+                                    onClick={() => setSelectedCategoryId(c.id)}
+                                    className={`w-full text-left border border-gray-800 hover:bg-gray-800 transition-colors rounded-xl p-3 ${c.id === selectedCategory?.id
+                                        ? "bg-gray-800"
+                                        : "bg-gray-900"
+                                        }`}
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+
+                                        <div className="min-w-0">
+                                            <div className="font-medium truncate">
+                                                {c.name}
+                                            </div>
+                                            <div className="text-gray-400 text-xs mt-1">
+                                                {expensesByCategory.find(
+                                                    (x) => x.category_id === c.id
+                                                )?.expenses?.length ?? 0}{" "}
+                                                gastos
+                                            </div>
+                                        </div>
+
+
+                                        <div className="flex flex-col gap-2 shrink-0 w-[110px]">
+                                            <button
+                                                type="button"
+                                                className="w-full bg-blue-600 cursor-pointer hover:bg-blue-400 transition-colors px-2 py-1 rounded-lg text-xs"
+                                            >
+                                                Editar
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => openDeleteModal(c)}
+                                                className="w-full bg-red-600 cursor-pointer hover:bg-red-400 transition-colors px-2 py-1 rounded-lg text-xs"
+                                            >
+                                                Excluir
+                                            </button>
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+
                         <div className="mt-4">
-                            <Link to="/" className="text-gray-300 hover:text-white text-sm transition-colors">
+                            <Link
+                                to="/"
+                                className="text-gray-300 hover:text-white text-sm transition-colors"
+                            >
                                 ← Voltar para despesas
                             </Link>
                         </div>
                     </Card>
 
-                    {/* Coluna: gastos da categoria */}
+
                     <div className="lg:col-span-2">
                         <Card>
                             <div className="flex items-end justify-between gap-4 mb-4">
                                 <div>
-                                    <div className="text-gray-400 text-sm">Gastos da categoria</div>
-                                    <div className="text-2xl font-bold mt-1">{selectedCategory?.name}</div>
-                                </div>
-
-                                <div className="text-sm text-gray-400">
-                                    {/* Placeholder de contagem depois */}
-                                    {/* Ex: 12 lançamentos */}
-                                    —
+                                    <div className="text-gray-400 text-sm">
+                                        Gastos da categoria
+                                    </div>
+                                    <div className="text-2xl font-bold mt-1">
+                                        {selectedCategory?.name}
+                                    </div>
                                 </div>
                             </div>
 
@@ -223,19 +222,11 @@ export function CategoriesPage() {
                                     </thead>
 
                                     <tbody>
-                                        {/* Layout (placeholders). Renderize as despesas filtradas por categoria depois. */}
-                                        {selectedCategoryExpenses?.expenses.map((expense) => (
-                                            <tr
-                                                key={expense.id}
-                                                className="border-b border-gray-700"
-                                            >
-                                                <td className="py-3">
-                                                    {expense.title}
-                                                </td>
+                                        {selectedCategoryExpenses?.expenses?.map((expense) => (
+                                            <tr key={expense.id} className="border-b border-gray-700">
+                                                <td className="py-3">{expense.title}</td>
 
-                                                <td className="py-3">
-                                                    R$ {expense.amount}
-                                                </td>
+                                                <td className="py-3">R$ {expense.amount}</td>
 
                                                 <td className="py-3">
                                                     {new Date(expense.date).toLocaleDateString("pt-BR")}
@@ -243,37 +234,27 @@ export function CategoriesPage() {
 
                                                 <td className="py-3">
                                                     <div className="flex gap-2">
-                                                        <button
-                                                            type="button"
-                                                            className="bg-gray-800 hover:bg-gray-700 transition-colors px-3 py-1.5 rounded-lg text-sm"
-                                                        >
+                                                        <button className="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-sm">
                                                             Editar
                                                         </button>
 
                                                         <button
-                                                            type="button"
                                                             onClick={() => deleteExpenseById(expense.id)}
-                                                            className="bg-red-600 hover:bg-red-500 transition-colors px-3 py-1.5 rounded-lg text-sm"
+                                                            className="bg-red-600 hover:bg-red-500 px-3 py-1.5 rounded-lg text-sm"
                                                         >
                                                             Remover
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        )
-                                        )}
+                                        ))}
                                     </tbody>
                                 </table>
-                            </div>
-
-                            <div className="mt-4 text-gray-400 text-sm">
-                                {/* Placeholder: se não houver gastos, mostrar mensagem depois. */}
-                                —
                             </div>
                         </Card>
                     </div>
                 </div>
-            </div >
+            </div>
 
             <CreateCategoryModal
                 isOpen={isCreateModalOpen}
@@ -287,7 +268,6 @@ export function CategoriesPage() {
                 expensesCount={expensesCountToDelete}
                 onDeleted={refreshCategoriesAndExpenses}
             />
-        </div >
+        </div>
     );
 }
-

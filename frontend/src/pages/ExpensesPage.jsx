@@ -4,10 +4,11 @@ import { ExpenseList } from "../components/ExpenseList";
 import { Header } from "../components/Header";
 import { useEffect, useState } from "react";
 import { getTotalExpenses } from "../services/api";
+import { ExpensesChart } from "../components/ExpensesChart";
 
 export function ExpensesPage() {
-
     const [totalExpenses, setTotalExpenses] = useState(0);
+
     useEffect(() => {
         async function load() {
             try {
@@ -19,7 +20,7 @@ export function ExpensesPage() {
             }
         }
         load();
-    }, [])
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-950 text-white">
@@ -37,16 +38,19 @@ export function ExpensesPage() {
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <Card>
-                        <div className="text-gray-400">Total de gastos</div>
-                        <div className="text-4xl font-bold mt-1 text-green-300">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalExpenses)}</div>
-                    </Card>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                    <div className="lg:col-span-1">
+                        <Card>
+                            <div className="text-gray-400">Total de gastos</div>
+                            <div className="text-4xl font-bold mt-1 text-green-300">
+                                {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalExpenses)}
+                            </div>
+                        </Card>
+                    </div>
 
-                    <Card>
-                        <div className="text-gray-400">Resumo</div>
-                        <div className="mt-2 text-gray-200">Em breve</div>
-                    </Card>
+                    <div className="lg:col-span-2">
+                        <ExpensesChart />
+                    </div>
                 </div>
 
                 <div className="bg-gray-900 rounded-xl shadow-sm p-4">
@@ -56,4 +60,6 @@ export function ExpensesPage() {
         </div>
     );
 }
+
+
 
