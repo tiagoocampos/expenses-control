@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
+import { DeleteCategoryModal } from "../components/DeleteCategoryModal";
 import { Header } from "../components/Header";
-import { deleteCategory, deleteExpense, getCategories, getExpenses, getExpensesByCategory } from "../services/api";
+import { deleteExpense, getCategories, getExpenses, getExpensesByCategory } from "../services/api";
+
 
 export function CategoriesPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [id, setId] = useState(null);
+
 
     const [categoryList, setCategoryList] = useState([]);
     const [expensesByCategory, setExpensesByCategory] = useState([]);
 
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
+    const [expensesCountToDelete, setExpensesCountToDelete] = useState(undefined);
 
     useEffect(() => {
         async function load() {
@@ -36,9 +43,11 @@ export function CategoriesPage() {
         }
 
         async function loadExpenses() {
+            // mantido apenas para compatibilidade com o layout atual
+
             try {
                 const data = await getExpenses();
-                setId(data[0].id);
+
                 console.log(data)
             } catch (error) {
                 console.log(error);
@@ -54,14 +63,16 @@ export function CategoriesPage() {
 
         try {
             const data = await deleteExpense({ id: expenseId });
-            alert(data?.message || "Gasto excluído com sucesso")
+            toast.success(data?.message || "Gasto excluído com sucesso");
+
 
             const grouped = await getExpensesByCategory();
             setExpensesByCategory(grouped);
         } catch (error) {
             console.log(error);
-            alert("Erro ao excluir gasto")
+            toast.error("Erro ao excluir gasto");
         }
+
     }
 
 
@@ -70,30 +81,38 @@ export function CategoriesPage() {
 
     const selectedCategory = categoryList.find((c) => c.id === selectedCategoryId);
 
-    async function deleteCategoryById(categoryId) {
+    // const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategoryId);
+
+    async function refreshCategoriesAndExpenses() {
         try {
-            const data = await deleteCategory({ id: categoryId });
-            alert(data?.message || "Categoria excluída com sucesso");
-            const categories = await getCategories();
-            setCategoryList(categories)
+            const [categories, grouped] = await Promise.all([getCategories(), getExpensesByCategory()]);
 
-            const grouped = await getExpensesByCategory();
-            setExpensesByCategory(grouped)
+            setCategoryList(categories);
+            setExpensesByCategory(grouped);
 
-            if (selectedCategoryId === categoryId) {
-                setSelectedCategoryId(categories?.[0]?.id ?? null)
+            if (categories?.length > 0 && selectedCategoryId === null) {
+                setSelectedCategoryId(categories[0].id);
             }
-
         } catch (error) {
             console.log(error);
-            alert("Erro ao deletar categoria")
         }
     }
 
+    function openDeleteModal(category) {
+        setCategoryToDelete(category);
+
+        const count = expensesByCategory?.find((x) => x.category_id === category?.id)?.expenses?.length ?? 0;
+        setExpensesCountToDelete(count);
+
+        setIsDeleteModalOpen(true);
+    }
+
     const selectedCategoryExpenses = expensesByCategory.find((category) => category.category_id === selectedCategoryId);
+
     return (
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
+
 
             <div className="max-w-5xl mx-auto px-4 py-8">
                 <div className="flex items-end justify-between gap-6 mb-6">
@@ -122,6 +141,8 @@ export function CategoriesPage() {
                         <div className="space-y-2 ">
                             <div className="max-h-80 overflow-y-auto pr-1 py-2">
                                 <div className="space-y-2">
+
+
                                     {categoryList.map((c) => (
 
 
@@ -154,7 +175,7 @@ export function CategoriesPage() {
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => deleteCategoryById(c.id)}
+                                                        onClick={() => openDeleteModal(c)}
                                                         className="bg-red-600 hover:bg-red-500 transition-colors px-2 py-1 rounded-lg text-xs"
                                                     >
                                                         Excluir categoria
@@ -257,6 +278,14 @@ export function CategoriesPage() {
             <CreateCategoryModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
+            />
+
+            <DeleteCategoryModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                category={categoryToDelete}
+                expensesCount={expensesCountToDelete}
+                onDeleted={refreshCategoriesAndExpenses}
             />
         </div >
     );

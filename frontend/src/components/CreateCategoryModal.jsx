@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { createCategory } from "../services/api";
+
 
 
 
@@ -17,12 +19,12 @@ export function CreateCategoryModal({ isOpen, onClose }) {
 
         try {
             const data = await createCategory({ name });
-            alert(data.message);
+            toast.success(data.message || "Categoria criada com sucesso");
             setName("");
             onClose();
         } catch (error) {
             console.log(error);
-            alert("Erro ao criar categoria");
+            toast.error("Erro ao criar categoria");
         }
     }
 
