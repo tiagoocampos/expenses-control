@@ -39,4 +39,13 @@ export async function deleteCategory({ id }){
   return apiClient.delete(`/categories/delete-category/${id}`);
 }
 
+export async function updateExpense({id, category_id, title, amount, date}){
+  return apiClient.put(`expense/update-expense/${id}`,{
+    category_id,
+    title,
+    amount,
+    date,
+  })
+}
+
 

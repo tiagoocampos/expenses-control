@@ -129,3 +129,22 @@ export function deleteExpense(req, res){
     return res.status(200).json({ message: "Gasto deletado com sucesso" });
   });
 }
+
+export function updateExpense(req, res){
+    const { id } = req.params;
+    const { category_id, title, amount, date } = req.body;
+    const sql = "UPDATE expenses SET category_id=?, title=?, amount=?, date=? WHERE id=?";
+
+    db.query(sql, [category_id, title, amount, date, id], (err, result)=>{
+        if(err){
+            console.log(err)
+            return res.status(500).json({ message: "Erro ao atualizar gasto"});
+        }
+
+        if(result.affectedRows === 0){
+            return res.status(404).json({ message: "Gasto não encontrado "});
+        }
+
+        return res.status(200).json({ message: "Gasto atualizado com sucesso"});
+    } )
+}

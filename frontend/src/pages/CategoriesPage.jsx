@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
 import { DeleteCategoryModal } from "../components/DeleteCategoryModal";
+import { EditExpenseModal } from "../components/EditExpenseModal";
 import { Header } from "../components/Header";
 import {
     deleteExpense,
@@ -23,6 +24,10 @@ export function CategoriesPage() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
     const [expensesCountToDelete, setExpensesCountToDelete] = useState(undefined);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [expenseToEdit, setExpenseToEdit] = useState(null);
+
 
     useEffect(() => {
         async function load() {
@@ -173,10 +178,25 @@ export function CategoriesPage() {
                                             <div className="flex flex-col gap-2 shrink-0 w-[110px]">
                                                 <button
                                                     type="button"
+                                                    onClick={() => {
+                                                        const firstExpense =
+                                                            expensesByCategory?.find(
+                                                                (x) => x.category_id === c.id
+                                                            )?.expenses?.[0];
+
+                                                        if (!firstExpense) return;
+
+                                                        setExpenseToEdit(firstExpense);
+                                                        setIsEditModalOpen(true);
+                                                    }}
                                                     className="w-full bg-blue-600 cursor-pointer hover:bg-blue-400 transition-colors px-2 py-1 rounded-lg text-xs"
                                                 >
                                                     Editar
                                                 </button>
+
+
+
+
 
                                                 <button
                                                     type="button"
@@ -246,9 +266,17 @@ export function CategoriesPage() {
 
                                                     <td className="py-3 text-sm">
                                                         <div className="flex gap-2">
-                                                            <button className="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setExpenseToEdit(expense);
+                                                                    setIsEditModalOpen(true);
+                                                                }}
+                                                                className="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm"
+                                                            >
                                                                 Editar
                                                             </button>
+
 
                                                             <button
                                                                 onClick={() => deleteExpenseById(expense.id)}
@@ -281,6 +309,15 @@ export function CategoriesPage() {
                 category={categoryToDelete}
                 expensesCount={expensesCountToDelete}
                 onDeleted={refreshCategoriesAndExpenses}
+            />
+
+            <EditExpenseModal
+                isOpen={isEditModalOpen}
+                onClose={() => {
+                    setIsEditModalOpen(false);
+                    setExpenseToEdit(null);
+                }}
+                expense={expenseToEdit}
             />
         </div>
     );

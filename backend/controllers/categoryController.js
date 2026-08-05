@@ -1,6 +1,7 @@
 import db from "../database/db.js";
 
 
+
 export function createCategory(req, res) {
     const { id, name } = req.body;
     const sql = "INSERT INTO categories (id, name) VALUES (?, ?)";
