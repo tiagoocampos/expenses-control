@@ -7,13 +7,13 @@ import { Link } from "react-router-dom";
 
 const COLORS = [
     "#22c55e", // green-500
-    "#16a34a", // green-600
     "#3b82f6", // blue-500
-    "#06b6d4", // cyan-500
     "#f59e0b", // amber-500
-    "#ef4444", // red-500
-    "#a78bfa", // violet-400
     "#ec4899", // pink-500
+    "#a78bfa", // violet-400
+    "#06b6d4", // cyan-500
+    "#ef4444", // red-500
+    "#16a34a", // green-600
     "#84cc16", // lime-500
 ];
 

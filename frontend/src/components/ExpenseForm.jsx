@@ -27,7 +27,6 @@ export function ExpenseForm() {
 
         try {
             const data = await createExpense({
-                user_id: 1,
                 category_id: Number(category),
                 title,
                 amount: Number(amount),
@@ -35,15 +34,10 @@ export function ExpenseForm() {
             });
 
             toast.success(data.message || "Despesa salva com sucesso");
+            clearForm();
         } catch (error) {
             console.log(error);
-            toast.error("Erro ao salvar despesa");
-            return;
-        } finally {
-            setTitle("");
-            setAmount(0);
-            setCategory("");
-            setDate("");
+            toast.error(error.message);
         }
     }
 

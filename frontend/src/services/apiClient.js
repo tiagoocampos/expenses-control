@@ -1,5 +1,3 @@
-
-
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
 async function request(path, { method = "GET", headers, body } = {}) {
@@ -10,7 +8,6 @@ async function request(path, { method = "GET", headers, body } = {}) {
   });
 
   if (!res.ok) {
-
     let message = `Request failed with status ${res.status}`;
     try {
       const data = await res.json();
@@ -34,19 +31,13 @@ export const apiClient = {
       },
       body: JSON.stringify(body),
     }),
-  delete: (path) => request(path, { method: "DELETE" }),
-  put: (path, body) =>
+  patch: (path, body) =>
     request(path, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-    })
+    }),
+  delete: (path) => request(path, { method: "DELETE" }),
 };
-
-
-
-
-
-

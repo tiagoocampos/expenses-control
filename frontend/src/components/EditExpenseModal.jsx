@@ -67,9 +67,9 @@ export function EditExpenseModal({ isOpen, onClose, expense }) {
             amount,
             date
         })
-        // Placeholder: você implementa o consumo da API depois
-        // await updateExpense({ id: expense.id, title, amount, date })
-        // onClose();
+
+        await updateExpense({ id: expense.id, title, amount, date })
+        onClose();
     }
 
     if (!isOpen) return null;

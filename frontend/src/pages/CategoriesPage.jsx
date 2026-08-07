@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
 import { DeleteCategoryModal } from "../components/DeleteCategoryModal";
+import { EditCategoryModal } from "../components/EditCategoryModal";
 import { EditExpenseModal } from "../components/EditExpenseModal";
 import { Header } from "../components/Header";
 import {
@@ -28,6 +29,8 @@ export function CategoriesPage() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [expenseToEdit, setExpenseToEdit] = useState(null);
 
+    const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+    const [categoryToEdit, setCategoryToEdit] = useState(null);
 
     useEffect(() => {
         async function load() {
@@ -178,29 +181,22 @@ export function CategoriesPage() {
                                             <div className="flex flex-col gap-2 shrink-0 w-[110px]">
                                                 <button
                                                     type="button"
-                                                    onClick={() => {
-                                                        const firstExpense =
-                                                            expensesByCategory?.find(
-                                                                (x) => x.category_id === c.id
-                                                            )?.expenses?.[0];
-
-                                                        if (!firstExpense) return;
-
-                                                        setExpenseToEdit(firstExpense);
-                                                        setIsEditModalOpen(true);
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setCategoryToEdit(c);
+                                                        setIsEditCategoryModalOpen(true);
                                                     }}
                                                     className="w-full bg-blue-600 cursor-pointer hover:bg-blue-400 transition-colors px-2 py-1 rounded-lg text-xs"
                                                 >
                                                     Editar
                                                 </button>
 
-
-
-
-
                                                 <button
                                                     type="button"
-                                                    onClick={() => openDeleteModal(c)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        openDeleteModal(c);
+                                                    }}
                                                     className="w-full bg-red-600 cursor-pointer hover:bg-red-400 transition-colors px-2 py-1 rounded-lg text-xs"
                                                 >
                                                     Excluir
@@ -301,6 +297,7 @@ export function CategoriesPage() {
             <CreateCategoryModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
+                onCreated={refreshCategoriesAndExpenses}
             />
 
             <DeleteCategoryModal
@@ -309,6 +306,16 @@ export function CategoriesPage() {
                 category={categoryToDelete}
                 expensesCount={expensesCountToDelete}
                 onDeleted={refreshCategoriesAndExpenses}
+            />
+
+            <EditCategoryModal
+                isOpen={isEditCategoryModalOpen}
+                onClose={() => {
+                    setIsEditCategoryModalOpen(false);
+                    setCategoryToEdit(null);
+                }}
+                category={categoryToEdit}
+                onUpdated={refreshCategoriesAndExpenses}
             />
 
             <EditExpenseModal

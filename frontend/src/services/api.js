@@ -1,12 +1,11 @@
-
 import { apiClient } from "./apiClient";
 
 export async function getExpenses() {
-  return apiClient.get("/expense");
+  return apiClient.get("/expenses");
 }
 
 export async function getTotalExpenses() {
-  return apiClient.get("/expense/total");
+  return apiClient.get("/expenses/total");
 }
 
 export async function getCategories() {
@@ -18,34 +17,36 @@ export async function createCategory({ name }) {
 }
 
 export async function getExpensesByCategory() {
-  return apiClient.get("/expense/by-category");
+  return apiClient.get("/expenses/by-category");
 }
 
-export async function createExpense({ user_id, category_id, title, amount, date }) {
-  return apiClient.post("/expense", {
-    user_id,
-    category_id,
+export async function createExpense({ category_id, title, amount, date }) {
+  return apiClient.post("/expenses", {
+    categoryId: category_id,
     title,
     amount,
     date,
   });
 }
 
-export async function deleteExpense({ id }){
-  return apiClient.delete(`/expense/delete-expense/${id}`);
+export async function deleteExpense({ id }) {
+  return apiClient.delete(`/expenses/${id}`);
 }
 
-export async function deleteCategory({ id }){
-  return apiClient.delete(`/categories/delete-category/${id}`);
+export async function deleteCategory({ id }) {
+  return apiClient.delete(`/categories/${id}`);
 }
 
-export async function updateExpense({id, category_id, title, amount, date}){
-  return apiClient.put(`expense/update-expense/${id}`,{
-    category_id,
+export async function updateCategory({ id, name }) {
+  return apiClient.patch(`/categories/${id}`, { name });
+}
+
+export async function updateExpense({ id, category_id, title, amount, date }) {
+  return apiClient.patch(`/expenses/${id}`, {
+    categoryId: category_id,
     title,
     amount,
     date,
-  })
+  });
 }
-
 
