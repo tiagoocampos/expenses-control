@@ -10,6 +10,9 @@ export function ExpenseForm() {
     const [date, setDate] = useState("");
     const [categoryList, setCategoryList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userId, setUserId] = useState(null);
+
+
 
     useEffect(() => {
         async function loadCategories() {

@@ -3,20 +3,28 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateExpenseDto } from './dto/create-expense.dto.js';
 import { UpdateExpenseDto } from './dto/update-expense.dto.js';
 
-const USER_ID = 1; // fixo até implementar autenticação
+
+
+
 
 @Injectable()
 export class ExpensesService {
   constructor(private prisma: PrismaService) { }
 
-  create(createExpenseDto: CreateExpenseDto) {
+  async create(createExpenseDto: CreateExpenseDto) {
+    const { userId, ...data } = createExpenseDto;
+    const userExists = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!userExists) throw new NotFoundException('Usuário não encontrado');
     return this.prisma.expense.create({
-      data: { ...createExpenseDto, userId: USER_ID },
+      data: { ...data, userId },
     });
   }
 
-  findAll() {
-    return this.prisma.expense.findMany({ include: { category: true } });
+  findAll(userId: number) {
+    return this.prisma.expense.findMany({
+      where: { userId },
+      include: { category: true }
+    });
   }
 
   async findOne(id: number) {
@@ -44,17 +52,17 @@ export class ExpensesService {
     }
   }
 
-  async getTotal() {
+  async getTotal(userId: number) {
     const result = await this.prisma.expense.aggregate({
-      where: { userId: USER_ID },
+      where: { userId },
       _sum: { amount: true },
     });
     return { total: result._sum.amount ?? 0 };
   }
 
-  async getByCategory() {
+  async getByCategory(userId: number) {
     const expenses = await this.prisma.expense.findMany({
-      where: { userId: USER_ID },
+      where: { userId },
       include: { category: true },
       orderBy: { category: { name: 'asc' } },
     });

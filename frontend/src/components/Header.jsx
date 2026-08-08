@@ -8,6 +8,7 @@ export function Header() {
     const location = useLocation();
     const isHomePage = location.pathname === "/";
     const isCategories = location.pathname === "/categories";
+    const isRegister = location.pathname === "/register";
 
     return (
         <div className="bg-gray-950 border-b border-gray-800">
@@ -46,6 +47,19 @@ export function Header() {
                             }
                         >
                             Categorias
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link
+                            to="/register"
+                            className={
+                                isRegister
+                                    ? "text-green-400 font-medium"
+                                    : "text-gray-300 hover:text-white"
+                            }
+                        >
+                            Criar conta
                         </Link>
                     </li>
                 </ul>
@@ -88,6 +102,19 @@ export function Header() {
                                             }
                                         >
                                             Categorias
+                                        </Link>
+                                    </SheetClose>
+
+                                    <SheetClose asChild>
+                                        <Link
+                                            to="/register"
+                                            className={
+                                                isRegister
+                                                    ? "bg-gray-800 text-green-400 font-medium px-3 py-2 rounded-lg"
+                                                    : "text-gray-300 hover:bg-gray-800 px-3 py-2 rounded-lg"
+                                            }
+                                        >
+                                            Criar conta
                                         </Link>
                                     </SheetClose>
                                 </nav>
