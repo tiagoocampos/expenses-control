@@ -7,6 +7,7 @@ import { CategoriesModule } from './categories/categories.module.js';
 import { ExpensesModule } from './expenses/expenses.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { IncomesModule } from './incomes/incomes.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
     ExpensesModule,
     UserModule,
     AuthModule,
+    IncomesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

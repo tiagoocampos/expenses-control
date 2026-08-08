@@ -1,23 +1,24 @@
 import { apiClient } from "./apiClient";
 
-const USER_ID_KEY = "userId";
 
-function getUserId() {
-  return localStorage.getItem(USER_ID_KEY);
-}
 
 export async function userRegister({ name, email, password }) {
-  const data = await apiClient.post("/users", { name, email, password });
-  localStorage.setItem(USER_ID_KEY, String(data.id));
-  return data;
+  return apiClient.post("/users", { name, email, password });
 }
 
+export async function userLogin({ email, password }) {
+  return apiClient.post("/auth/login", { email, password });
+}
+
+
+
+
 export async function getExpenses() {
-  return apiClient.get(`/expenses?userId=${getUserId()}`);
+  return apiClient.get("/expenses");
 }
 
 export async function getTotalExpenses() {
-  return apiClient.get(`/expenses/total?userId=${getUserId()}`);
+  return apiClient.get("/expenses/total");
 }
 
 export async function getCategories() {
@@ -29,12 +30,11 @@ export async function createCategory({ name }) {
 }
 
 export async function getExpensesByCategory() {
-  return apiClient.get(`/expenses/by-category?userId=${getUserId()}`);
+  return apiClient.get("/expenses/by-category");
 }
 
 export async function createExpense({ category_id, title, amount, date }) {
   return apiClient.post("/expenses", {
-    userId: Number(getUserId()),
     categoryId: category_id,
     title,
     amount,
@@ -56,7 +56,6 @@ export async function updateCategory({ id, name }) {
 
 export async function updateExpense({ id, category_id, title, amount, date }) {
   return apiClient.patch(`/expenses/${id}`, {
-    userId: Number(getUserId()),
     categoryId: category_id,
     title,
     amount,

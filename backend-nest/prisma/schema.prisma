@@ -16,6 +16,7 @@ model User {
   createdAt DateTime  @default(now()) @map("created_at")
 
   expenses Expense[]
+  incomes  Income[]
 
   @@map("users")
 }
@@ -41,4 +42,16 @@ model Expense {
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@map("expenses")
+}
+
+model Income {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  source     String
+  amount     Decimal  @db.Decimal(10, 2)
+  receivedAt DateTime @map("received_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("incomes")
 }

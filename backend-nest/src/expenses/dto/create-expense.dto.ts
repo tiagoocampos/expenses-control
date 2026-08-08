@@ -1,10 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsDateString, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsDate, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateExpenseDto {
-    @IsInt({ message: 'O ID do usuário deve ser um número inteiro' })
-    userId!: number;
-
     @IsInt({ message: 'O ID da categoria deve ser um número inteiro' })
     categoryId!: number;
 

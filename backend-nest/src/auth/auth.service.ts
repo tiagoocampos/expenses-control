@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { CreateAuthDto } from './dto/create-auth.dto.js';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(private prisma: PrismaService) { }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async login(createAuthDto: CreateAuthDto) {
+    const { email, password } = createAuthDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    const payload = { sub: user.id, email: user.email, name: user.name };
+    const access_token = jwt.sign(payload, process.env.JWT_SECRET ?? 'secret', {
+      expiresIn: process.env.JWT_EXPIRES_IN ?? '1d',
+    });
+
+    return {
+      access_token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    };
   }
 }

@@ -17,6 +17,8 @@ const COLORS = [
     "#84cc16", // lime-500
 ];
 
+const isAuthenticated = !!localStorage.getItem("token");
+
 function formatBRL(value) {
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -88,8 +90,8 @@ export function ExpensesChart() {
         return (
             <Card>
                 <div className="flex flex-col gap-5 text-gray-400">
-                    <h1>Gráfico de despesas</h1><p>Aqui será exibido o gráfico das suas despesas. <br></br> <Link className="text-green-400 hover:text-green-200" to="/despesas">Adicione uma despesa</Link> para monitorar seus gastos.</p></div>
-            </Card>
+                    <h1>Gráfico de despesas</h1><p>Aqui será exibido o gráfico das suas despesas. <br></br> <Link className="text-green-400 hover:text-green-200" to={isAuthenticated ? "/despesas" : "/login"}>Adicione uma despesa</Link> para monitorar seus gastos.</p></div>
+            </Card >
         );
     }
 

@@ -1,29 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ExpensesService } from './expenses.service.js';
 import { CreateExpenseDto } from './dto/create-expense.dto.js';
 import { UpdateExpenseDto } from './dto/update-expense.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
 
+@UseGuards(JwtAuthGuard)
 @Controller('expenses')
 export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) { }
 
   @Post()
-  create(@Body() createExpenseDto: CreateExpenseDto) {
-    return this.expensesService.create(createExpenseDto);
+  create(@Body() createExpenseDto: CreateExpenseDto, @CurrentUser('userId') userId: number) {
+    return this.expensesService.create(createExpenseDto, userId);
   }
 
   @Get()
-  findAll(@Query('userId', ParseIntPipe) userId: number) {
+  findAll(@CurrentUser('userId') userId: number) {
     return this.expensesService.findAll(userId);
   }
 
   @Get('total')
-  getTotal(@Query('userId', ParseIntPipe) userId: number) {
+  getTotal(@CurrentUser('userId') userId: number) {
     return this.expensesService.getTotal(userId);
   }
 
   @Get('by-category')
-  getByCategory(@Query('userId', ParseIntPipe) userId: number) {
+  getByCategory(@CurrentUser('userId') userId: number) {
     return this.expensesService.getByCategory(userId);
   }
 

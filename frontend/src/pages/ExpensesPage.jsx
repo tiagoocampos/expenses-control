@@ -9,6 +9,8 @@ import { ExpensesChart } from "../components/ExpensesChart";
 export function ExpensesPage() {
     const [totalExpenses, setTotalExpenses] = useState(0);
 
+    const isAuthenticated = !!localStorage.getItem("token");
+
     useEffect(() => {
         async function load() {
             try {
@@ -34,7 +36,7 @@ export function ExpensesPage() {
                     </div>
 
                     <Link
-                        to="/despesas"
+                        to={isAuthenticated ? "/despesas" : "/login"}
                         className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base text-center"
                     >
                         + Adicionar despesa

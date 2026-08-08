@@ -11,12 +11,11 @@ import { UpdateExpenseDto } from './dto/update-expense.dto.js';
 export class ExpensesService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createExpenseDto: CreateExpenseDto) {
-    const { userId, ...data } = createExpenseDto;
+  async create(createExpenseDto: CreateExpenseDto, userId: number) {
     const userExists = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!userExists) throw new NotFoundException('Usuário não encontrado');
     return this.prisma.expense.create({
-      data: { ...data, userId },
+      data: { ...createExpenseDto, userId },
     });
   }
 
