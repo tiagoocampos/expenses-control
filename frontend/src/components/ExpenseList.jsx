@@ -80,7 +80,7 @@ export function ExpenseList() {
                         {expenses.map((expense) => (
                             <tr key={expense.id} className="border-b border-gray-700">
                                 <td className="py-2 pr-2">
-                                    <div className="max-w-[260px] truncate">
+                                    <div className="max-w-65 truncate">
                                         {expense.title || "Sem descrição"}
                                     </div>
                                 </td>

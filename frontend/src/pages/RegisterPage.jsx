@@ -24,7 +24,7 @@ export function RegisterPage() {
 
         try {
             const data = await userRegister({ name, email, password });
-            toast.success("Conta criada com sucesso");
+            toast.success("Conta criada com sucesso, verifique seu email para ativar a conta");
             ClearForm();
             navigate("/login");
         } catch (error) {
