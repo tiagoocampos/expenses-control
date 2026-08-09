@@ -1,5 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
@@ -8,7 +11,10 @@ const SALT_ROUNDS = 10;
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    @Inject('EMAIL_SERVICE') private emailClient: ClientProxy,
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
     const existing = await this.prisma.user.findUnique({ where: { email: createUserDto.email } });
@@ -16,11 +22,30 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, SALT_ROUNDS);
 
-    const user = await this.prisma.user.create({
-      data: { ...createUserDto, password: hashedPassword },
-    });
+    try {
+      const user = await this.prisma.user.create({
+        data: { ...createUserDto, password: hashedPassword },
+      });
 
-    return this.excludePassword(user);
+      const token = jwt.sign(
+        { sub: user.id, purpose: 'email-verification' },
+        process.env.JWT_SECRET!,
+        { expiresIn: '1d' },
+      );
+
+      this.emailClient.emit('user.registered', {
+        name: user.name,
+        email: user.email,
+        verifyUrl: `${process.env.FRONTEND_URL}/verificar-email?token=${token}`,
+      });
+
+      return this.excludePassword(user);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException('Já existe um usuário com esse email');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
@@ -57,8 +82,6 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
   }
-
-
 
   private excludePassword(user: { password: string;[key: string]: unknown }) {
     const { password, ...rest } = user;

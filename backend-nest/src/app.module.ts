@@ -8,6 +8,7 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { IncomesModule } from './incomes/incomes.module';
+import { MessagingModule } from './messaging/messaging.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { IncomesModule } from './incomes/incomes.module';
     UserModule,
     AuthModule,
     IncomesModule,
+    MessagingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
