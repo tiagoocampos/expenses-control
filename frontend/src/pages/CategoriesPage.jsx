@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Card } from "../components/Card";
 import { CreateCategoryModal } from "../components/CreateCategoryModal";
@@ -15,8 +15,9 @@ import {
 } from "../services/api";
 
 export function CategoriesPage() {
+    const isAuthenticated = !!localStorage.getItem("token");
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
+    const navigate = useNavigate();
     const [categoryList, setCategoryList] = useState([]);
     const [expensesByCategory, setExpensesByCategory] = useState([]);
 
@@ -103,6 +104,11 @@ export function CategoriesPage() {
         }
     }
 
+    function isNotAuthenticated() {
+        navigate("/login");
+        toast.error("Você precisa estar logado para criar uma categoria");
+    }
+
     function openDeleteModal(category) {
         setCategoryToDelete(category);
 
@@ -129,7 +135,7 @@ export function CategoriesPage() {
 
                     <button
                         type="button"
-                        onClick={() => setIsCreateModalOpen(true)}
+                        onClick={() => { isAuthenticated ? setIsCreateModalOpen(true) : isNotAuthenticated() }}
                         className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base text-center"
                     >
                         + Nova categoria

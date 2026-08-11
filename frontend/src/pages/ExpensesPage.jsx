@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
 import { ExpenseList } from "../components/ExpenseList";
 import { Header } from "../components/Header";
 import { useEffect, useState } from "react";
 import { getTotalExpenses } from "../services/api";
 import { ExpensesChart } from "../components/ExpensesChart";
+import { toast } from "sonner";
 
 export function ExpensesPage() {
     const [totalExpenses, setTotalExpenses] = useState(0);
 
     const isAuthenticated = !!localStorage.getItem("token");
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function load() {
@@ -24,6 +26,15 @@ export function ExpensesPage() {
         load();
     }, []);
 
+    function isNotAuthenticated() {
+        toast.error("Você precisa estar logado para acessar esta página");
+        navigate("/login");
+    }
+
+    function linkToDespesas() {
+        navigate("/despesas");
+    }
+
     return (
         <div className="min-h-screen bg-gray-950 text-white">
             <Header />
@@ -35,12 +46,12 @@ export function ExpensesPage() {
                         <p className="text-gray-400 text-sm sm:text-base">Acompanhe e gerencie todas as suas despesas</p>
                     </div>
 
-                    <Link
-                        to={isAuthenticated ? "/despesas" : "/login"}
+                    <button
+                        onClick={() => { isAuthenticated ? linkToDespesas() : isNotAuthenticated() }}
                         className="bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base text-center"
                     >
                         + Adicionar despesa
-                    </Link>
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
