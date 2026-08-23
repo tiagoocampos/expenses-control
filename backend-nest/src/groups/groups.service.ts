@@ -26,7 +26,7 @@ export class GroupsService {
           { members: { some: { userId: targetUser.id } } },
         ],
       },
-      include: { members: { include: { user: true } } },
+      include: { members: { include: { user: { select: { id: true, name: true } } } } },
     });
 
     if (existingGroup) return existingGroup;
@@ -40,7 +40,7 @@ export class GroupsService {
           create: [{ userId: currentUserId }, { userId: targetUser.id }],
         },
       },
-      include: { members: { include: { user: true } } },
+      include: { members: { include: { user: { select: { id: true, name: true } } } } },
     });
 
     return group;
@@ -49,14 +49,14 @@ export class GroupsService {
   findAll(userId: number) {
     return this.prisma.group.findMany({
       where: { members: { some: { userId } } },
-      include: { members: { include: { user: true } } },
+      include: { members: { include: { user: { select: { id: true, name: true } } } } },
     });
   }
 
   async findOne(id: number, userId: number) {
     const group = await this.prisma.group.findUnique({
       where: { id },
-      include: { members: { include: { user: true } } },
+      include: { members: { include: { user: { select: { id: true, name: true } } } } },
     });
 
     if (!group) throw new NotFoundException('Grupo não encontrado');
@@ -65,6 +65,20 @@ export class GroupsService {
     }
 
     return group;
+  }
+
+  async findExpenses(id: number, userId: number) {
+    await this.findOne(id, userId);
+
+    return this.prisma.expense.findMany({
+      where: { groupId: id },
+      include: {
+        category: true,
+        splits: true,
+        user: { select: { id: true, name: true } },
+      },
+      orderBy: { date: 'desc' },
+    });
   }
 
   async update(id: number, updateGroupDto: UpdateGroupDto) {

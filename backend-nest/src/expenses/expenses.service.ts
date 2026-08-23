@@ -58,7 +58,7 @@ export class ExpensesService {
           { group: { members: { some: { userId } } } },
         ],
       },
-      include: { category: true },
+      include: { category: true, splits: true },
       orderBy: { date: 'desc' },
     });
   }

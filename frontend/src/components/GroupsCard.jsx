@@ -4,6 +4,7 @@ import { Copy, Users, LogIn, Loader2, UserRound } from "lucide-react";
 import { Card } from "./Card";
 import { LeaveGroupModal } from "./LeaveGroupModal";
 import { getGroups, getUserById, joinGroupByCode } from "../services/api";
+import { Link } from "react-router-dom";
 
 export function GroupsCard({ currentUser }) {
     const [shareCode, setShareCode] = useState("");
@@ -174,7 +175,12 @@ export function GroupsCard({ currentUser }) {
                                     className="bg-gray-950 border border-gray-800 rounded-lg p-3 flex items-center justify-between gap-3"
                                 >
                                     <div className="min-w-0">
-                                        <p className="font-medium text-sm truncate">{group.name}</p>
+                                        <Link
+                                            to={`/grupos/${group.id}`}
+                                            className="font-medium text-sm truncate hover:text-green-400 transition-colors block"
+                                        >
+                                            {group.name}
+                                        </Link>
                                         <p className="text-gray-400 text-xs flex items-center gap-1 mt-0.5">
                                             <UserRound className="h-3 w-3" />
                                             {group.members?.length ?? 0}{" "}

@@ -20,6 +20,11 @@ export class GroupsController {
     return this.groupsService.findAll(userId);
   }
 
+  @Get(':id/expenses')
+  findExpenses(@Param('id', ParseIntPipe) id: number, @CurrentUser('userId') userId: number) {
+    return this.groupsService.findExpenses(id, userId);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser('userId') userId: number) {
     return this.groupsService.findOne(id, userId);

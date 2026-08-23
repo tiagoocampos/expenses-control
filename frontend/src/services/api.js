@@ -91,6 +91,10 @@ export async function getGroup({ id }) {
   return apiClient.get(`/groups/${id}`);
 }
 
+export async function getGroupExpenses({ id }) {
+  return apiClient.get(`/groups/${id}/expenses`);
+}
+
 export async function joinGroupByCode({ shareCode }) {
   return apiClient.post("/groups/join", { shareCode });
 }
