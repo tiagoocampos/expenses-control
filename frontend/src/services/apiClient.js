@@ -1,10 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"
+const API_BASE_URL = "http://localhost:3000"
 
 const TOKEN_KEY = "token";
 
 function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
+
 
 function authHeaders(extraHeaders = {}) {
   const headers = { ...extraHeaders };

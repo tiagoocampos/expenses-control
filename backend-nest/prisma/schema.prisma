@@ -14,10 +14,13 @@ model User {
   email           String   @unique
   password        String
   isEmailVerified Boolean  @default(false) @map("is_email_verified")
+  shareCode       String   @unique @map("share_code")
   createdAt       DateTime @default(now()) @map("created_at")
 
-  expenses Expense[]
-  incomes  Income[]
+  expenses      Expense[]
+  incomes       Income[]
+  groupMembers  GroupMember[]
+  expenseSplits ExpenseSplit[]
 
   @@map("users")
 }
@@ -31,18 +34,58 @@ model Category {
   @@map("categories")
 }
 
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  members  GroupMember[]
+  expenses Expense[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id      Int @id @default(autoincrement())
+  groupId Int @map("group_id")
+  userId  Int @map("user_id")
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
 model Expense {
   id         Int      @id @default(autoincrement())
   userId     Int      @map("user_id")
   categoryId Int      @map("category_id")
+  groupId    Int?     @map("group_id")
   title      String
   amount     Decimal  @db.Decimal(10, 2)
   date       DateTime
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  group    Group?         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  splits   ExpenseSplit[]
 
   @@map("expenses")
+}
+
+model ExpenseSplit {
+  id        Int     @id @default(autoincrement())
+  expenseId Int     @map("expense_id")
+  userId    Int     @map("user_id")
+  amount    Decimal @db.Decimal(10, 2)
+  isPaid    Boolean @default(false) @map("is_paid")
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, userId])
+  @@map("expense_splits")
 }
 
 model Income {

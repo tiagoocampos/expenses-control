@@ -21,6 +21,7 @@ import {
 import { Header } from "../components/Header";
 import { Card } from "../components/Card";
 import { DeleteIncomeModal } from "../components/DeleteIncomeModal";
+import { GroupsCard } from "../components/GroupsCard";
 
 import { createIncome, getIncomes, updateIncome } from "../services/api";
 
@@ -242,6 +243,9 @@ export function ProfilePage() {
                                     </div>
                                 </div>
                             </Card>
+
+                            {/* Dividir gastos */}
+                            <GroupsCard currentUser={user} />
 
                             {/* Add income form */}
                             <Card>

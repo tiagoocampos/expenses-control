@@ -9,6 +9,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { IncomesModule } from './incomes/incomes.module';
 import { MessagingModule } from './messaging/messaging.module';
+import { GroupsModule } from './groups/groups.module';
+import { GroupMembersModule } from './group-members/group-members.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { MessagingModule } from './messaging/messaging.module';
     AuthModule,
     IncomesModule,
     MessagingModule,
+    GroupsModule,
+    GroupMembersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

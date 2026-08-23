@@ -40,12 +40,13 @@ export async function getExpensesByCategory() {
   return apiClient.get("/expenses/by-category");
 }
 
-export async function createExpense({ category_id, title, amount, date }) {
+export async function createExpense({ category_id, title, amount, date, group_id }) {
   return apiClient.post("/expenses", {
     categoryId: category_id,
     title,
     amount,
     date,
+    ...(group_id ? { groupId: group_id } : {}),
   });
 }
 
@@ -76,4 +77,28 @@ export async function updateIncome({ id, source, amount, receivedAt }) {
 
 export async function deleteIncome({ id }) {
   return apiClient.delete(`/incomes/${id}`);
+}
+
+export async function getUserById({ id }) {
+  return apiClient.get(`/users/${id}`);
+}
+
+export async function getGroups() {
+  return apiClient.get("/groups");
+}
+
+export async function getGroup({ id }) {
+  return apiClient.get(`/groups/${id}`);
+}
+
+export async function joinGroupByCode({ shareCode }) {
+  return apiClient.post("/groups/join", { shareCode });
+}
+
+export async function updateGroup({ id, name }) {
+  return apiClient.patch(`/groups/${id}`, { name });
+}
+
+export async function leaveGroup({ groupId }) {
+  return apiClient.delete(`/group-members/${groupId}`);
 }

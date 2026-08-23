@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CreateCategoryModal } from "./CreateCategoryModal";
-import { createExpense, getCategories } from "../services/api";
+import { createExpense, getCategories, getGroups } from "../services/api";
 
 export function ExpenseForm() {
     const [title, setTitle] = useState("");
@@ -12,7 +12,8 @@ export function ExpenseForm() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userId, setUserId] = useState(null);
 
-
+    const [groupList, setGroupList] = useState([]);
+    const [groupId, setGroupId] = useState("");
 
     useEffect(() => {
         async function loadCategories() {
@@ -20,6 +21,18 @@ export function ExpenseForm() {
             setCategoryList(data);
         }
         loadCategories();
+    }, []);
+
+    useEffect(() => {
+        async function loadGroups() {
+            try {
+                const data = await getGroups();
+                setGroupList(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        loadGroups();
     }, []);
 
     async function addExpense() {
@@ -34,6 +47,7 @@ export function ExpenseForm() {
                 title,
                 amount: Number(amount),
                 date,
+                group_id: groupId ? Number(groupId) : undefined,
             });
 
             toast.success(data.message || "Despesa salva com sucesso");
@@ -49,6 +63,7 @@ export function ExpenseForm() {
         setAmount(0);
         setCategory("");
         setDate("");
+        setGroupId("");
     }
 
     return (
@@ -103,6 +118,24 @@ export function ExpenseForm() {
                         </option>
                     </select>
                 </div>
+
+                {groupList.length > 0 && (
+                    <div>
+                        <label className="block text-sm text-gray-300 mb-1">Dividir com</label>
+                        <select
+                            value={groupId}
+                            onChange={(e) => setGroupId(e.target.value)}
+                            className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-green-600 text-sm sm:text-base"
+                        >
+                            <option value="">Não dividir (gasto pessoal)</option>
+                            {groupList.map((g) => (
+                                <option key={g.id} value={g.id}>
+                                    {g.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
                 <div>
                     <label className="block text-sm text-gray-300 mb-1">Data</label>

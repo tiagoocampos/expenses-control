@@ -31,8 +31,8 @@ export class ExpensesController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.expensesService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser('userId') userId: number) {
+    return this.expensesService.findOne(id, userId);
   }
 
   @Patch(':id')

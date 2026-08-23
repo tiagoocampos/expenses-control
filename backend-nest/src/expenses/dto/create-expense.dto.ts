@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsDate, IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateExpenseDto {
     @IsInt({ message: 'O ID da categoria deve ser um número inteiro' })
@@ -18,4 +18,8 @@ export class CreateExpenseDto {
     @Type(() => Date)
     @IsDate({ message: 'Insira uma data válida' })
     date!: Date;
+
+    @IsInt({ message: 'O ID do grupo deve ser um número inteiro' })
+    @IsOptional()
+    groupId?: number;
 }

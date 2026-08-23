@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Users } from "lucide-react";
 import { getExpenses } from "../services/api";
 
 function formatBRL(value) {
@@ -44,8 +45,18 @@ export function ExpenseList() {
                     >
                         <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                                <div className="font-medium text-sm truncate">
-                                    {expense.title || "Sem descrição"}
+                                <div className="flex items-center gap-1.5">
+                                    <div className="font-medium text-sm truncate">
+                                        {expense.title || "Sem descrição"}
+                                    </div>
+                                    {expense.groupId && (
+                                        <span
+                                            className="shrink-0 text-green-400"
+                                            title="Gasto compartilhado"
+                                        >
+                                            <Users className="h-3.5 w-3.5" />
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="text-gray-400 text-xs mt-1">
                                     {expense.category?.name || "Sem categoria"}
@@ -80,8 +91,18 @@ export function ExpenseList() {
                         {expenses.map((expense) => (
                             <tr key={expense.id} className="border-b border-gray-700">
                                 <td className="py-2 pr-2">
-                                    <div className="max-w-65 truncate">
-                                        {expense.title || "Sem descrição"}
+                                    <div className="flex items-center gap-1.5 max-w-65">
+                                        <span className="truncate">
+                                            {expense.title || "Sem descrição"}
+                                        </span>
+                                        {expense.groupId && (
+                                            <span
+                                                className="shrink-0 text-green-400"
+                                                title="Gasto compartilhado"
+                                            >
+                                                <Users className="h-3.5 w-3.5" />
+                                            </span>
+                                        )}
                                     </div>
                                 </td>
                                 <td className="py-2 text-sm">{formatBRL(expense.amount)}</td>
