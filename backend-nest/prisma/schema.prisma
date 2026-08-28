@@ -19,6 +19,7 @@ model User {
 
   expenses      Expense[]
   incomes       Income[]
+  categories    Category[]
   groupMembers  GroupMember[]
   expenseSplits ExpenseSplit[]
 
@@ -26,9 +27,11 @@ model User {
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
-  name String
+  id     Int    @id @default(autoincrement())
+  userId Int    @map("user_id")
+  name   String
 
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   expenses Expense[]
 
   @@map("categories")
@@ -75,11 +78,12 @@ model Expense {
 }
 
 model ExpenseSplit {
-  id        Int     @id @default(autoincrement())
-  expenseId Int     @map("expense_id")
-  userId    Int     @map("user_id")
-  amount    Decimal @db.Decimal(10, 2)
-  isPaid    Boolean @default(false) @map("is_paid")
+  id        Int       @id @default(autoincrement())
+  expenseId Int       @map("expense_id")
+  userId    Int       @map("user_id")
+  amount    Decimal   @db.Decimal(10, 2)
+  isPaid    Boolean   @default(false) @map("is_paid")
+  paidAt    DateTime? @map("paid_at")
 
   expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)

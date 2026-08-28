@@ -91,6 +91,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const CategoryScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   name: 'name'
 } as const
 
@@ -133,7 +134,8 @@ export const ExpenseSplitScalarFieldEnum = {
   expenseId: 'expenseId',
   userId: 'userId',
   amount: 'amount',
-  isPaid: 'isPaid'
+  isPaid: 'isPaid',
+  paidAt: 'paidAt'
 } as const
 
 export type ExpenseSplitScalarFieldEnum = (typeof ExpenseSplitScalarFieldEnum)[keyof typeof ExpenseSplitScalarFieldEnum]

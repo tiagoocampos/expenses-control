@@ -46,6 +46,7 @@ export type ExpenseSplitMinAggregateOutputType = {
   userId: number | null
   amount: runtime.Decimal | null
   isPaid: boolean | null
+  paidAt: Date | null
 }
 
 export type ExpenseSplitMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type ExpenseSplitMaxAggregateOutputType = {
   userId: number | null
   amount: runtime.Decimal | null
   isPaid: boolean | null
+  paidAt: Date | null
 }
 
 export type ExpenseSplitCountAggregateOutputType = {
@@ -62,6 +64,7 @@ export type ExpenseSplitCountAggregateOutputType = {
   userId: number
   amount: number
   isPaid: number
+  paidAt: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type ExpenseSplitMinAggregateInputType = {
   userId?: true
   amount?: true
   isPaid?: true
+  paidAt?: true
 }
 
 export type ExpenseSplitMaxAggregateInputType = {
@@ -94,6 +98,7 @@ export type ExpenseSplitMaxAggregateInputType = {
   userId?: true
   amount?: true
   isPaid?: true
+  paidAt?: true
 }
 
 export type ExpenseSplitCountAggregateInputType = {
@@ -102,6 +107,7 @@ export type ExpenseSplitCountAggregateInputType = {
   userId?: true
   amount?: true
   isPaid?: true
+  paidAt?: true
   _all?: true
 }
 
@@ -197,6 +203,7 @@ export type ExpenseSplitGroupByOutputType = {
   userId: number
   amount: runtime.Decimal
   isPaid: boolean
+  paidAt: Date | null
   _count: ExpenseSplitCountAggregateOutputType | null
   _avg: ExpenseSplitAvgAggregateOutputType | null
   _sum: ExpenseSplitSumAggregateOutputType | null
@@ -228,6 +235,7 @@ export type ExpenseSplitWhereInput = {
   userId?: Prisma.IntFilter<"ExpenseSplit"> | number
   amount?: Prisma.DecimalFilter<"ExpenseSplit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFilter<"ExpenseSplit"> | boolean
+  paidAt?: Prisma.DateTimeNullableFilter<"ExpenseSplit"> | Date | string | null
   expense?: Prisma.XOR<Prisma.ExpenseScalarRelationFilter, Prisma.ExpenseWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -238,6 +246,7 @@ export type ExpenseSplitOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   expense?: Prisma.ExpenseOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -252,6 +261,7 @@ export type ExpenseSplitWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"ExpenseSplit"> | number
   amount?: Prisma.DecimalFilter<"ExpenseSplit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFilter<"ExpenseSplit"> | boolean
+  paidAt?: Prisma.DateTimeNullableFilter<"ExpenseSplit"> | Date | string | null
   expense?: Prisma.XOR<Prisma.ExpenseScalarRelationFilter, Prisma.ExpenseWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "expenseId_userId">
@@ -262,6 +272,7 @@ export type ExpenseSplitOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ExpenseSplitCountOrderByAggregateInput
   _avg?: Prisma.ExpenseSplitAvgOrderByAggregateInput
   _max?: Prisma.ExpenseSplitMaxOrderByAggregateInput
@@ -278,11 +289,13 @@ export type ExpenseSplitScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"ExpenseSplit"> | number
   amount?: Prisma.DecimalWithAggregatesFilter<"ExpenseSplit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolWithAggregatesFilter<"ExpenseSplit"> | boolean
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ExpenseSplit"> | Date | string | null
 }
 
 export type ExpenseSplitCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
   expense: Prisma.ExpenseCreateNestedOneWithoutSplitsInput
   user: Prisma.UserCreateNestedOneWithoutExpenseSplitsInput
 }
@@ -293,11 +306,13 @@ export type ExpenseSplitUncheckedCreateInput = {
   userId: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
 }
 
 export type ExpenseSplitUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expense?: Prisma.ExpenseUpdateOneRequiredWithoutSplitsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutExpenseSplitsNestedInput
 }
@@ -308,6 +323,7 @@ export type ExpenseSplitUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExpenseSplitCreateManyInput = {
@@ -316,11 +332,13 @@ export type ExpenseSplitCreateManyInput = {
   userId: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
 }
 
 export type ExpenseSplitUpdateManyMutationInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExpenseSplitUncheckedUpdateManyInput = {
@@ -329,6 +347,7 @@ export type ExpenseSplitUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExpenseSplitListRelationFilter = {
@@ -352,6 +371,7 @@ export type ExpenseSplitCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
 }
 
 export type ExpenseSplitAvgOrderByAggregateInput = {
@@ -367,6 +387,7 @@ export type ExpenseSplitMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
 }
 
 export type ExpenseSplitMinOrderByAggregateInput = {
@@ -375,6 +396,7 @@ export type ExpenseSplitMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
 }
 
 export type ExpenseSplitSumOrderByAggregateInput = {
@@ -468,9 +490,14 @@ export type ExpenseSplitUncheckedUpdateManyWithoutExpenseNestedInput = {
   deleteMany?: Prisma.ExpenseSplitScalarWhereInput | Prisma.ExpenseSplitScalarWhereInput[]
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type ExpenseSplitCreateWithoutUserInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
   expense: Prisma.ExpenseCreateNestedOneWithoutSplitsInput
 }
 
@@ -479,6 +506,7 @@ export type ExpenseSplitUncheckedCreateWithoutUserInput = {
   expenseId: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
 }
 
 export type ExpenseSplitCreateOrConnectWithoutUserInput = {
@@ -516,11 +544,13 @@ export type ExpenseSplitScalarWhereInput = {
   userId?: Prisma.IntFilter<"ExpenseSplit"> | number
   amount?: Prisma.DecimalFilter<"ExpenseSplit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFilter<"ExpenseSplit"> | boolean
+  paidAt?: Prisma.DateTimeNullableFilter<"ExpenseSplit"> | Date | string | null
 }
 
 export type ExpenseSplitCreateWithoutExpenseInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutExpenseSplitsInput
 }
 
@@ -529,6 +559,7 @@ export type ExpenseSplitUncheckedCreateWithoutExpenseInput = {
   userId: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
 }
 
 export type ExpenseSplitCreateOrConnectWithoutExpenseInput = {
@@ -562,11 +593,13 @@ export type ExpenseSplitCreateManyUserInput = {
   expenseId: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
 }
 
 export type ExpenseSplitUpdateWithoutUserInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expense?: Prisma.ExpenseUpdateOneRequiredWithoutSplitsNestedInput
 }
 
@@ -575,6 +608,7 @@ export type ExpenseSplitUncheckedUpdateWithoutUserInput = {
   expenseId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExpenseSplitUncheckedUpdateManyWithoutUserInput = {
@@ -582,6 +616,7 @@ export type ExpenseSplitUncheckedUpdateManyWithoutUserInput = {
   expenseId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExpenseSplitCreateManyExpenseInput = {
@@ -589,11 +624,13 @@ export type ExpenseSplitCreateManyExpenseInput = {
   userId: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: boolean
+  paidAt?: Date | string | null
 }
 
 export type ExpenseSplitUpdateWithoutExpenseInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutExpenseSplitsNestedInput
 }
 
@@ -602,6 +639,7 @@ export type ExpenseSplitUncheckedUpdateWithoutExpenseInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExpenseSplitUncheckedUpdateManyWithoutExpenseInput = {
@@ -609,6 +647,7 @@ export type ExpenseSplitUncheckedUpdateManyWithoutExpenseInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -619,6 +658,7 @@ export type ExpenseSplitSelect<ExtArgs extends runtime.Types.Extensions.Internal
   userId?: boolean
   amount?: boolean
   isPaid?: boolean
+  paidAt?: boolean
   expense?: boolean | Prisma.ExpenseDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expenseSplit"]>
@@ -629,6 +669,7 @@ export type ExpenseSplitSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   amount?: boolean
   isPaid?: boolean
+  paidAt?: boolean
   expense?: boolean | Prisma.ExpenseDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expenseSplit"]>
@@ -639,6 +680,7 @@ export type ExpenseSplitSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   amount?: boolean
   isPaid?: boolean
+  paidAt?: boolean
   expense?: boolean | Prisma.ExpenseDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expenseSplit"]>
@@ -649,9 +691,10 @@ export type ExpenseSplitSelectScalar = {
   userId?: boolean
   amount?: boolean
   isPaid?: boolean
+  paidAt?: boolean
 }
 
-export type ExpenseSplitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "expenseId" | "userId" | "amount" | "isPaid", ExtArgs["result"]["expenseSplit"]>
+export type ExpenseSplitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "expenseId" | "userId" | "amount" | "isPaid" | "paidAt", ExtArgs["result"]["expenseSplit"]>
 export type ExpenseSplitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   expense?: boolean | Prisma.ExpenseDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -677,6 +720,7 @@ export type $ExpenseSplitPayload<ExtArgs extends runtime.Types.Extensions.Intern
     userId: number
     amount: runtime.Decimal
     isPaid: boolean
+    paidAt: Date | null
   }, ExtArgs["result"]["expenseSplit"]>
   composites: {}
 }
@@ -1107,6 +1151,7 @@ export interface ExpenseSplitFieldRefs {
   readonly userId: Prisma.FieldRef<"ExpenseSplit", 'Int'>
   readonly amount: Prisma.FieldRef<"ExpenseSplit", 'Decimal'>
   readonly isPaid: Prisma.FieldRef<"ExpenseSplit", 'Boolean'>
+  readonly paidAt: Prisma.FieldRef<"ExpenseSplit", 'DateTime'>
 }
     
 

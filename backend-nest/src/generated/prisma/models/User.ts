@@ -234,6 +234,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   expenses?: Prisma.ExpenseListRelationFilter
   incomes?: Prisma.IncomeListRelationFilter
+  categories?: Prisma.CategoryListRelationFilter
   groupMembers?: Prisma.GroupMemberListRelationFilter
   expenseSplits?: Prisma.ExpenseSplitListRelationFilter
 }
@@ -248,6 +249,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   incomes?: Prisma.IncomeOrderByRelationAggregateInput
+  categories?: Prisma.CategoryOrderByRelationAggregateInput
   groupMembers?: Prisma.GroupMemberOrderByRelationAggregateInput
   expenseSplits?: Prisma.ExpenseSplitOrderByRelationAggregateInput
 }
@@ -265,6 +267,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   expenses?: Prisma.ExpenseListRelationFilter
   incomes?: Prisma.IncomeListRelationFilter
+  categories?: Prisma.CategoryListRelationFilter
   groupMembers?: Prisma.GroupMemberListRelationFilter
   expenseSplits?: Prisma.ExpenseSplitListRelationFilter
 }, "id" | "email" | "shareCode">
@@ -306,6 +309,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
   incomes?: Prisma.IncomeCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
@@ -320,6 +324,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
   incomes?: Prisma.IncomeUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
@@ -333,6 +338,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
   incomes?: Prisma.IncomeUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
@@ -347,6 +353,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
   incomes?: Prisma.IncomeUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -443,6 +450,20 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type UserCreateNestedOneWithoutCategoriesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoriesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoriesInput
+  upsert?: Prisma.UserUpsertWithoutCategoriesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCategoriesInput, Prisma.UserUpdateWithoutCategoriesInput>, Prisma.UserUncheckedUpdateWithoutCategoriesInput>
+}
+
 export type UserCreateNestedOneWithoutGroupMembersInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutGroupMembersInput, Prisma.UserUncheckedCreateWithoutGroupMembersInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutGroupMembersInput
@@ -499,6 +520,76 @@ export type UserUpdateOneRequiredWithoutIncomesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutIncomesInput, Prisma.UserUpdateWithoutIncomesInput>, Prisma.UserUncheckedUpdateWithoutIncomesInput>
 }
 
+export type UserCreateWithoutCategoriesInput = {
+  name: string
+  email: string
+  password: string
+  isEmailVerified?: boolean
+  shareCode: string
+  createdAt?: Date | string
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
+  incomes?: Prisma.IncomeCreateNestedManyWithoutUserInput
+  groupMembers?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
+  expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCategoriesInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  isEmailVerified?: boolean
+  shareCode: string
+  createdAt?: Date | string
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
+  incomes?: Prisma.IncomeUncheckedCreateNestedManyWithoutUserInput
+  groupMembers?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCategoriesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
+}
+
+export type UserUpsertWithoutCategoriesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCategoriesInput, Prisma.UserUncheckedUpdateWithoutCategoriesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCategoriesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCategoriesInput, Prisma.UserUncheckedUpdateWithoutCategoriesInput>
+}
+
+export type UserUpdateWithoutCategoriesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isEmailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shareCode?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
+  incomes?: Prisma.IncomeUpdateManyWithoutUserNestedInput
+  groupMembers?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCategoriesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isEmailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  shareCode?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
+  incomes?: Prisma.IncomeUncheckedUpdateManyWithoutUserNestedInput
+  groupMembers?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+  expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutGroupMembersInput = {
   name: string
   email: string
@@ -508,6 +599,7 @@ export type UserCreateWithoutGroupMembersInput = {
   createdAt?: Date | string
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
   incomes?: Prisma.IncomeCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
 
@@ -521,6 +613,7 @@ export type UserUncheckedCreateWithoutGroupMembersInput = {
   createdAt?: Date | string
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
   incomes?: Prisma.IncomeUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -549,6 +642,7 @@ export type UserUpdateWithoutGroupMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
   incomes?: Prisma.IncomeUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
 
@@ -562,6 +656,7 @@ export type UserUncheckedUpdateWithoutGroupMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
   incomes?: Prisma.IncomeUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -573,6 +668,7 @@ export type UserCreateWithoutExpensesInput = {
   shareCode: string
   createdAt?: Date | string
   incomes?: Prisma.IncomeCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
@@ -586,6 +682,7 @@ export type UserUncheckedCreateWithoutExpensesInput = {
   shareCode: string
   createdAt?: Date | string
   incomes?: Prisma.IncomeUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
@@ -614,6 +711,7 @@ export type UserUpdateWithoutExpensesInput = {
   shareCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incomes?: Prisma.IncomeUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
@@ -627,6 +725,7 @@ export type UserUncheckedUpdateWithoutExpensesInput = {
   shareCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incomes?: Prisma.IncomeUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -640,6 +739,7 @@ export type UserCreateWithoutExpenseSplitsInput = {
   createdAt?: Date | string
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
   incomes?: Prisma.IncomeCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
 }
 
@@ -653,6 +753,7 @@ export type UserUncheckedCreateWithoutExpenseSplitsInput = {
   createdAt?: Date | string
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
   incomes?: Prisma.IncomeUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -681,6 +782,7 @@ export type UserUpdateWithoutExpenseSplitsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
   incomes?: Prisma.IncomeUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
 }
 
@@ -694,6 +796,7 @@ export type UserUncheckedUpdateWithoutExpenseSplitsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
   incomes?: Prisma.IncomeUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -705,6 +808,7 @@ export type UserCreateWithoutIncomesInput = {
   shareCode: string
   createdAt?: Date | string
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitCreateNestedManyWithoutUserInput
 }
@@ -718,6 +822,7 @@ export type UserUncheckedCreateWithoutIncomesInput = {
   shareCode: string
   createdAt?: Date | string
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
   groupMembers?: Prisma.GroupMemberUncheckedCreateNestedManyWithoutUserInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedCreateNestedManyWithoutUserInput
 }
@@ -746,6 +851,7 @@ export type UserUpdateWithoutIncomesInput = {
   shareCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUpdateManyWithoutUserNestedInput
 }
@@ -759,6 +865,7 @@ export type UserUncheckedUpdateWithoutIncomesInput = {
   shareCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
   groupMembers?: Prisma.GroupMemberUncheckedUpdateManyWithoutUserNestedInput
   expenseSplits?: Prisma.ExpenseSplitUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -771,6 +878,7 @@ export type UserUncheckedUpdateWithoutIncomesInput = {
 export type UserCountOutputType = {
   expenses: number
   incomes: number
+  categories: number
   groupMembers: number
   expenseSplits: number
 }
@@ -778,6 +886,7 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   expenses?: boolean | UserCountOutputTypeCountExpensesArgs
   incomes?: boolean | UserCountOutputTypeCountIncomesArgs
+  categories?: boolean | UserCountOutputTypeCountCategoriesArgs
   groupMembers?: boolean | UserCountOutputTypeCountGroupMembersArgs
   expenseSplits?: boolean | UserCountOutputTypeCountExpenseSplitsArgs
 }
@@ -809,6 +918,13 @@ export type UserCountOutputTypeCountIncomesArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CategoryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountGroupMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GroupMemberWhereInput
 }
@@ -831,6 +947,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   incomes?: boolean | Prisma.User$incomesArgs<ExtArgs>
+  categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
   groupMembers?: boolean | Prisma.User$groupMembersArgs<ExtArgs>
   expenseSplits?: boolean | Prisma.User$expenseSplitsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -870,6 +987,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   incomes?: boolean | Prisma.User$incomesArgs<ExtArgs>
+  categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
   groupMembers?: boolean | Prisma.User$groupMembersArgs<ExtArgs>
   expenseSplits?: boolean | Prisma.User$expenseSplitsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -882,6 +1000,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     incomes: Prisma.$IncomePayload<ExtArgs>[]
+    categories: Prisma.$CategoryPayload<ExtArgs>[]
     groupMembers: Prisma.$GroupMemberPayload<ExtArgs>[]
     expenseSplits: Prisma.$ExpenseSplitPayload<ExtArgs>[]
   }
@@ -1289,6 +1408,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   expenses<T extends Prisma.User$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   incomes<T extends Prisma.User$incomesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$incomesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncomePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  categories<T extends Prisma.User$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groupMembers<T extends Prisma.User$groupMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$groupMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenseSplits<T extends Prisma.User$expenseSplitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expenseSplitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpenseSplitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1765,6 +1885,30 @@ export type User$incomesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.IncomeScalarFieldEnum | Prisma.IncomeScalarFieldEnum[]
+}
+
+/**
+ * User.categories
+ */
+export type User$categoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Category
+   */
+  select?: Prisma.CategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Category
+   */
+  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoryInclude<ExtArgs> | null
+  where?: Prisma.CategoryWhereInput
+  orderBy?: Prisma.CategoryOrderByWithRelationInput | Prisma.CategoryOrderByWithRelationInput[]
+  cursor?: Prisma.CategoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CategoryScalarFieldEnum | Prisma.CategoryScalarFieldEnum[]
 }
 
 /**

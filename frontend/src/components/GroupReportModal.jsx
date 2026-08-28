@@ -6,57 +6,34 @@ function formatBRL(value) {
 }
 
 function formatDateTime(date) {
+    if (!date) return "";
     return new Date(date).toLocaleString("pt-BR");
 }
 
-function buildSummaryText(report) {
-    if (!report) return "";
-
-    const parts = report.users
-        .map((user) => `${formatBRL(user.total)} de ${user.name}`)
-        .join(" e ");
-
-    return `Total de gastos do grupo até o momento: ${formatBRL(report.total)}${
-        parts ? `, sendo ${parts}` : ""
-    }`;
+function formatDate(date) {
+    return new Date(date).toLocaleDateString("pt-BR");
 }
 
 function buildFullReportText(report) {
     const lines = [
         `Relatório de gastos — ${report.groupName}`,
         `Gerado em: ${formatDateTime(report.generatedAt)}`,
+        `Total do grupo: ${formatBRL(report.total)}`,
         "",
-        buildSummaryText(report),
-        "",
-        "Gastos por usuário:",
-        ...report.users.map(
-            (user) =>
-                `- ${user.name}: ${formatBRL(user.total)} (${user.count} ${
-                    user.count === 1 ? "gasto criado" : "gastos criados"
-                })`
-        ),
     ];
 
-    if (report.comparisons.length > 0) {
-        lines.push("", "Comparação entre usuários:");
-        for (const cmp of report.comparisons) {
-            const amountLine =
-                cmp.amountDiff === 0
-                    ? `${cmp.a.name} e ${cmp.b.name} gastaram o mesmo valor (${formatBRL(cmp.a.total)})`
-                    : cmp.amountDiff > 0
-                      ? `${cmp.a.name} gastou ${formatBRL(cmp.amountDiff)} a mais que ${cmp.b.name} (${formatBRL(cmp.a.total)} vs ${formatBRL(cmp.b.total)})`
-                      : `${cmp.b.name} gastou ${formatBRL(Math.abs(cmp.amountDiff))} a mais que ${cmp.a.name} (${formatBRL(cmp.b.total)} vs ${formatBRL(cmp.a.total)})`;
-
-            const countLine =
-                cmp.countDiff === 0
-                    ? `${cmp.a.name} e ${cmp.b.name} criaram a mesma quantidade de gastos (${cmp.a.count})`
-                    : cmp.countDiff > 0
-                      ? `${cmp.a.name} criou ${cmp.countDiff} ${cmp.countDiff === 1 ? "gasto" : "gastos"} a mais que ${cmp.b.name} (${cmp.a.count} vs ${cmp.b.count})`
-                      : `${cmp.b.name} criou ${Math.abs(cmp.countDiff)} ${Math.abs(cmp.countDiff) === 1 ? "gasto" : "gastos"} a mais que ${cmp.a.name} (${cmp.b.count} vs ${cmp.a.count})`;
-
-            lines.push(`- ${amountLine}`);
-            lines.push(`  ${countLine}`);
+    for (const expense of report.expenses) {
+        lines.push(`${expense.title} — ${formatBRL(expense.amount)} (${formatDate(expense.date)})`);
+        lines.push(`Pago por: ${expense.payerName}`);
+        for (const split of expense.splits) {
+            const status = split.isPaid
+                ? split.paidAt
+                    ? `Pago em ${formatDateTime(split.paidAt)}`
+                    : "Pago"
+                : "Pendente";
+            lines.push(`  - ${split.name}: ${formatBRL(split.amount)} — ${status}`);
         }
+        lines.push("");
     }
 
     return lines.join("\n");
@@ -104,111 +81,63 @@ export function GroupReportModal({ isOpen, onClose, report }) {
 
                 <div className="space-y-5">
                     <p className="text-gray-200 text-sm leading-relaxed bg-gray-950 border border-gray-800 rounded-xl p-3">
-                        {buildSummaryText(report)}
+                        Total do grupo: {formatBRL(report.total)}
                     </p>
 
-                    <div>
-                        <h3 className="text-sm font-semibold text-gray-300 mb-2">
-                            Gastos por usuário
-                        </h3>
-                        {report.users.length === 0 ? (
-                            <p className="text-gray-500 text-sm">Nenhum membro no grupo.</p>
-                        ) : (
-                            <ul className="space-y-2">
-                                {report.users.map((user) => {
-                                    const share =
-                                        report.total > 0
-                                            ? ((user.total / report.total) * 100).toFixed(1)
-                                            : "0,0";
-                                    return (
-                                        <li
-                                            key={user.userId}
-                                            className="bg-gray-950 border border-gray-800 rounded-xl p-3"
-                                        >
-                                            <div className="flex items-start justify-between gap-3">
-                                                <div className="min-w-0">
-                                                    <p className="font-medium text-sm truncate">
-                                                        {user.name}
-                                                    </p>
-                                                    <p className="text-gray-400 text-xs mt-0.5">
-                                                        {user.count}{" "}
-                                                        {user.count === 1
-                                                            ? "gasto criado"
-                                                            : "gastos criados"}
-                                                    </p>
-                                                </div>
-                                                <div className="text-right shrink-0">
-                                                    <div className="text-sm font-semibold text-green-300">
-                                                        {formatBRL(user.total)}
-                                                    </div>
-                                                    <div className="text-xs text-gray-500">
-                                                        {share.replace(".", ",")}% do total
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        )}
-                    </div>
+                    {report.expenses.length === 0 ? (
+                        <p className="text-gray-500 text-sm">Nenhum gasto registrado ainda.</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {report.expenses.map((expense) => (
+                                <li
+                                    key={expense.id}
+                                    className="bg-gray-950 border border-gray-800 rounded-xl p-3"
+                                >
+                                    <div className="flex items-start justify-between gap-3 mb-2">
+                                        <div className="min-w-0">
+                                            <p className="font-medium text-sm truncate">
+                                                {expense.title}
+                                            </p>
+                                            <p className="text-gray-400 text-xs mt-0.5">
+                                                Pago por {expense.payerName} ·{" "}
+                                                {formatDate(expense.date)}
+                                            </p>
+                                        </div>
+                                        <div className="text-sm font-semibold shrink-0">
+                                            {formatBRL(expense.amount)}
+                                        </div>
+                                    </div>
 
-                    {report.comparisons.length > 0 && (
-                        <div>
-                            <h3 className="text-sm font-semibold text-gray-300 mb-2">
-                                Comparação entre usuários
-                            </h3>
-                            <ul className="space-y-2">
-                                {report.comparisons.map((cmp) => (
-                                    <li
-                                        key={`${cmp.a.userId}-${cmp.b.userId}`}
-                                        className="bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm text-gray-300 space-y-1"
-                                    >
-                                        <p>
-                                            {cmp.amountDiff === 0 ? (
-                                                <>
-                                                    <span className="text-white">{cmp.a.name}</span> e{" "}
-                                                    <span className="text-white">{cmp.b.name}</span>{" "}
-                                                    gastaram o mesmo valor (
-                                                    {formatBRL(cmp.a.total)})
-                                                </>
-                                            ) : cmp.amountDiff > 0 ? (
-                                                <>
-                                                    <span className="text-white">{cmp.a.name}</span>{" "}
-                                                    gastou{" "}
-                                                    <span className="text-green-400 font-medium">
-                                                        {formatBRL(cmp.amountDiff)}
-                                                    </span>{" "}
-                                                    a mais que{" "}
-                                                    <span className="text-white">{cmp.b.name}</span>{" "}
-                                                    ({formatBRL(cmp.a.total)} vs{" "}
-                                                    {formatBRL(cmp.b.total)})
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span className="text-white">{cmp.b.name}</span>{" "}
-                                                    gastou{" "}
-                                                    <span className="text-green-400 font-medium">
-                                                        {formatBRL(Math.abs(cmp.amountDiff))}
-                                                    </span>{" "}
-                                                    a mais que{" "}
-                                                    <span className="text-white">{cmp.a.name}</span>{" "}
-                                                    ({formatBRL(cmp.b.total)} vs{" "}
-                                                    {formatBRL(cmp.a.total)})
-                                                </>
-                                            )}
-                                        </p>
-                                        <p className="text-xs text-gray-400">
-                                            {cmp.countDiff === 0
-                                                ? `${cmp.a.name} e ${cmp.b.name} criaram a mesma quantidade de gastos (${cmp.a.count})`
-                                                : cmp.countDiff > 0
-                                                  ? `${cmp.a.name} criou ${cmp.countDiff} ${cmp.countDiff === 1 ? "gasto" : "gastos"} a mais que ${cmp.b.name} (${cmp.a.count} vs ${cmp.b.count})`
-                                                  : `${cmp.b.name} criou ${Math.abs(cmp.countDiff)} ${Math.abs(cmp.countDiff) === 1 ? "gasto" : "gastos"} a mais que ${cmp.a.name} (${cmp.b.count} vs ${cmp.a.count})`}
-                                        </p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                                    <ul className="space-y-1.5 pt-2 border-t border-gray-800">
+                                        {expense.splits.map((split) => (
+                                            <li
+                                                key={split.id}
+                                                className="flex items-center justify-between text-xs gap-2"
+                                            >
+                                                <span className="text-gray-300 truncate">
+                                                    {split.name}:{" "}
+                                                    <span className="text-gray-400">
+                                                        {formatBRL(split.amount)}
+                                                    </span>
+                                                </span>
+
+                                                {split.isPaid ? (
+                                                    <span className="text-green-400 text-right shrink-0">
+                                                        {split.paidAt
+                                                            ? `Pago em ${formatDateTime(split.paidAt)}`
+                                                            : "Pago"}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-yellow-500 shrink-0">
+                                                        Pendente
+                                                    </span>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
+                        </ul>
                     )}
 
                     <div className="flex gap-3 pt-1">

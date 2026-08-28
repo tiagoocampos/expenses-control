@@ -63,6 +63,10 @@ export async function deleteExpense({ id }) {
   return apiClient.delete(`/expenses/${id}`);
 }
 
+export async function payExpenseSplit({ expenseId }) {
+  return apiClient.patch(`/expenses/${expenseId}/pay-split`);
+}
+
 export async function getIncomes() {
   return apiClient.get("/incomes");
 }

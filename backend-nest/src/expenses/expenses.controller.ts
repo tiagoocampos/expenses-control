@@ -40,6 +40,11 @@ export class ExpensesController {
     return this.expensesService.update(id, updateExpenseDto);
   }
 
+  @Patch(':id/pay-split')
+  paySplit(@Param('id', ParseIntPipe) id: number, @CurrentUser('userId') userId: number) {
+    return this.expensesService.payMySplit(id, userId);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.expensesService.remove(id);

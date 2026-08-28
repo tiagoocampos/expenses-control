@@ -7,36 +7,44 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CategoriesService {
   constructor(private prisma: PrismaService) { }
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return this.prisma.category.create({ data: createCategoryDto });
+  create(createCategoryDto: CreateCategoryDto, userId: number) {
+    return this.prisma.category.create({
+      data: { ...createCategoryDto, userId },
+    });
   }
 
-  findAll() {
-    return this.prisma.category.findMany();
+  findAll(userId: number) {
+    return this.prisma.category.findMany({ where: { userId } });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const category = await this.prisma.category.findUnique({ where: { id } });
-    if (!category) throw new NotFoundException('Categoria não encontrada');
+    if (!category || category.userId !== userId) {
+      throw new NotFoundException('Categoria não encontrada');
+    }
     return category;
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    try {
-      return await this.prisma.category.update({
-        where: { id },
-        data: updateCategoryDto,
-      });
-    } catch {
+  async update(id: number, updateCategoryDto: UpdateCategoryDto, userId: number) {
+    const result = await this.prisma.category.updateMany({
+      where: { id, userId },
+      data: updateCategoryDto,
+    });
+
+    if (result.count === 0) {
       throw new NotFoundException('Categoria não encontrada');
     }
+
+    return this.prisma.category.findUnique({ where: { id } });
   }
 
-  async remove(id: number) {
-    try {
-      return await this.prisma.category.delete({ where: { id } });
-    } catch {
+  async remove(id: number, userId: number) {
+    const result = await this.prisma.category.deleteMany({ where: { id, userId } });
+
+    if (result.count === 0) {
       throw new NotFoundException('Categoria não encontrada');
     }
+
+    return { message: 'Categoria removida com sucesso' };
   }
 }

@@ -42,7 +42,8 @@ export class ExpensesService {
           create: group.members.map((member) => ({
             userId: member.userId,
             amount: splitAmount,
-            isPaid: member.userId === userId, // quem pagou já está "quitado" com a própria parte
+            isPaid: member.userId === userId,
+            paidAt: member.userId === userId ? new Date() : null,
           })),
         },
       },
@@ -96,6 +97,25 @@ export class ExpensesService {
     } catch {
       throw new NotFoundException('Gasto não encontrado');
     }
+  }
+
+  async payMySplit(expenseId: number, userId: number) {
+    const split = await this.prisma.expenseSplit.findUnique({
+      where: { expenseId_userId: { expenseId, userId } },
+    });
+  
+    if (!split) {
+      throw new NotFoundException('Você não tem uma parte a pagar neste gasto');
+    }
+  
+    if (split.isPaid) {
+      return split;
+    }
+  
+    return this.prisma.expenseSplit.update({
+      where: { expenseId_userId: { expenseId, userId } },
+      data: { isPaid: true, paidAt: new Date() },
+    });
   }
 
   async getTotal(userId: number) {

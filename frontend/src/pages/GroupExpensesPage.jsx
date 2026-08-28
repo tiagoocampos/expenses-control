@@ -16,7 +16,7 @@ import { Header } from "../components/Header";
 import { Card } from "../components/Card";
 import { LeaveGroupModal } from "../components/LeaveGroupModal";
 import { GroupReportModal } from "../components/GroupReportModal";
-import { getGroup, getGroupExpenses, updateGroup } from "../services/api";
+import { getGroup, getGroupExpenses, updateGroup, payExpenseSplit } from "../services/api";
 
 function formatBRL(value) {
     return `R$ ${Number(value).toFixed(2).replace(".", ",")}`;
@@ -41,6 +41,8 @@ export function GroupExpensesPage() {
     const [isEditingName, setIsEditingName] = useState(false);
     const [nameInput, setNameInput] = useState("");
     const [savingName, setSavingName] = useState(false);
+
+    const [payingId, setPayingId] = useState(null);
 
     const currentUser = useMemo(() => {
         try {
@@ -109,58 +111,26 @@ export function GroupExpensesPage() {
     }, [expenses, currentUser]);
 
     function generateReport() {
-        const nameByUserId = {};
-        for (const member of group?.members || []) {
-            nameByUserId[member.userId] = member.user?.name || "Alguém";
-        }
-
-        const stats = {};
-        function ensureUser(userId) {
-            if (!stats[userId]) {
-                stats[userId] = {
-                    userId,
-                    name: nameByUserId[userId] || "Alguém",
-                    total: 0,
-                    count: 0,
-                };
-            }
-            return stats[userId];
-        }
-
-        for (const member of group?.members || []) {
-            ensureUser(member.userId);
-        }
-
-        for (const expense of expenses) {
-            if (expense.user?.name) {
-                nameByUserId[expense.userId] = expense.user.name;
-            }
-            const user = ensureUser(expense.userId);
-            user.name = nameByUserId[expense.userId] || user.name;
-            user.total += Number(expense.amount);
-            user.count += 1;
-        }
-
-        const users = Object.values(stats).sort((a, b) => b.total - a.total);
-        const comparisons = [];
-
-        for (let i = 0; i < users.length; i++) {
-            for (let j = i + 1; j < users.length; j++) {
-                comparisons.push({
-                    a: users[i],
-                    b: users[j],
-                    amountDiff: users[i].total - users[j].total,
-                    countDiff: users[i].count - users[j].count,
-                });
-            }
-        }
-
+        const items = expenses.map((expense) => ({
+            id: expense.id,
+            title: expense.title,
+            amount: expense.amount,
+            date: expense.date,
+            payerName: memberName(expense.userId, expense),
+            splits: (expense.splits || []).map((split) => ({
+                id: split.id,
+                name: memberName(split.userId, expense),
+                amount: split.amount,
+                isPaid: split.isPaid,
+                paidAt: split.paidAt,
+            })),
+        }));
+    
         setReport({
             groupName: group?.name || "Grupo",
             generatedAt: new Date().toISOString(),
             total: expenses.reduce((sum, e) => sum + Number(e.amount), 0),
-            users,
-            comparisons,
+            expenses: items,
         });
         setIsReportModalOpen(true);
     }
@@ -186,6 +156,20 @@ export function GroupExpensesPage() {
             toast.error(error.message || "Erro ao atualizar o nome do grupo.");
         } finally {
             setSavingName(false);
+        }
+    }
+
+    async function handlePaySplit(expenseId) {
+        setPayingId(expenseId);
+        try {
+            await payExpenseSplit({ expenseId });
+            toast.success("Sua parte foi marcada como paga!");
+            await loadData();
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message || "Erro ao marcar como pago.");
+        } finally {
+            setPayingId(null);
         }
     }
 
@@ -387,15 +371,44 @@ export function GroupExpensesPage() {
                                     </div>
 
                                     {expense.splits?.length > 0 && (
-                                        <div className="mt-2 pt-2 border-t border-gray-800 flex flex-wrap gap-x-4 gap-y-1">
-                                            {expense.splits.map((split) => (
-                                                <span key={split.id} className="text-xs text-gray-400">
-                                                    {memberName(split.userId, expense)}:{" "}
-                                                    <span className="text-gray-300">
-                                                        {formatBRL(split.amount)}
-                                                    </span>
-                                                </span>
-                                            ))}
+                                        <div className="mt-2 pt-2 border-t border-gray-800 flex flex-wrap items-center gap-x-4 gap-y-2">
+                                            {expense.splits.map((split) => {
+                                                const isMe = split.userId === currentUser?.id;
+                                                return (
+                                                    <div
+                                                        key={split.id}
+                                                        className="flex items-center gap-2 text-xs text-gray-400"
+                                                    >
+                                                        <span>
+                                                            {memberName(split.userId, expense)}:{" "}
+                                                            <span className="text-gray-300">
+                                                                {formatBRL(split.amount)}
+                                                            </span>
+                                                        </span>
+
+                                                        {isMe && !split.isPaid && (
+                                                            <button
+                                                                onClick={() => handlePaySplit(expense.id)}
+                                                                disabled={payingId === expense.id}
+                                                                className="flex items-center gap-1 text-green-400 hover:text-green-300 hover:bg-green-500/10 disabled:opacity-60 transition-colors px-2 py-0.5 rounded-md border border-green-800"
+                                                            >
+                                                                {payingId === expense.id ? (
+                                                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                                                ) : (
+                                                                    <Check className="h-3 w-3" />
+                                                                )}
+                                                                Marcar como paga
+                                                            </button>
+                                                        )}
+
+                                                        {isMe && split.isPaid && (
+                                                            <span className="text-green-500 text-[11px]">
+                                                                ✓ paga
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )}
                                 </li>
