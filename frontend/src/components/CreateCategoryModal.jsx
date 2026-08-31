@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCategory } from "../services/api";
+import { Loader2 } from "lucide-react";
 
 
 
@@ -9,14 +10,14 @@ import { createCategory } from "../services/api";
 export function CreateCategoryModal({ isOpen, onClose }) {
 
     const [name, setName] = useState("");
-
+    const [saving, setSaving] = useState(false);
     async function createCategoryHandler() {
         if (!name) {
 
 
             return;
         }
-
+        setSaving(true);
         try {
             const data = await createCategory({ name });
             toast.success(data.message || "Categoria criada com sucesso");
@@ -25,6 +26,8 @@ export function CreateCategoryModal({ isOpen, onClose }) {
         } catch (error) {
             console.log(error);
             toast.error("Erro ao criar categoria");
+        } finally {
+            setSaving(false);
         }
     }
 
@@ -83,10 +86,19 @@ export function CreateCategoryModal({ isOpen, onClose }) {
                         <button
                             type="button"
                             onClick={createCategoryHandler}
-                            className="flex-1 bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium"
+                            className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium"
                         >
 
-                            Criar categoria
+                            {saving ? (
+                                <>
+                                    <Loader2 className="animate-spin" />
+                                    Criando categoria...
+                                </>
+                            ) : (
+                                <>
+                                    Criar categoria
+                                </>
+                            )}
                         </button>
 
                     </div>

@@ -125,7 +125,7 @@ export function GroupExpensesPage() {
                 paidAt: split.paidAt,
             })),
         }));
-    
+
         setReport({
             groupName: group?.name || "Grupo",
             generatedAt: new Date().toISOString(),
@@ -199,81 +199,87 @@ export function GroupExpensesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-950 text-white">
+        <div className="min-h-screen bg-gray-950 text-white overflow-x-hidden">
             <Header />
 
             <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
-                <div className="mb-6 flex flex-wrap items-center gap-3">
-                    <Link
-                        to="/profile"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        aria-label="Voltar"
-                    >
-                        <ArrowLeft className="h-5 w-5" />
-                    </Link>
-                    <div className="min-w-0 flex-1">
-                        {isEditingName ? (
-                            <div className="flex items-center gap-2">
-                                <input
-                                    value={nameInput}
-                                    onChange={(e) => setNameInput(e.target.value)}
-                                    className="bg-gray-950 border border-gray-800 rounded-lg px-3 py-1.5 outline-none focus:border-green-600 text-xl sm:text-2xl font-bold"
-                                    autoFocus
-                                />
-                                <button
-                                    onClick={saveName}
-                                    disabled={savingName}
-                                    className="p-2 rounded-lg bg-green-600 hover:bg-green-500 disabled:opacity-60 transition-colors"
-                                    aria-label="Salvar"
-                                >
-                                    {savingName ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                        <Check className="h-4 w-4" />
-                                    )}
-                                </button>
-                                <button
-                                    onClick={() => setIsEditingName(false)}
-                                    disabled={savingName}
-                                    className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
-                                    aria-label="Cancelar"
-                                >
-                                    <X className="h-4 w-4" />
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <h1 className="text-2xl sm:text-3xl font-bold truncate">{group.name}</h1>
-                                <button
-                                    onClick={startEditName}
-                                    className="text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg"
-                                    aria-label="Editar nome"
-                                >
-                                    <Pencil className="h-4 w-4" />
-                                </button>
-                            </div>
-                        )}
-                        <p className="text-gray-400 text-sm sm:text-base mt-1 flex items-center gap-1.5">
-                            <Users className="h-4 w-4" />
-                            {group.members?.length ?? 0}{" "}
-                            {group.members?.length === 1 ? "membro" : "membros"}
-                        </p>
+                <div className="mb-6 flex flex-col gap-3">
+                    <div className="flex items-start gap-3 min-w-0">
+                        <Link
+                            to="/profile"
+                            className="text-gray-400 hover:text-white transition-colors shrink-0 mt-1"
+                            aria-label="Voltar"
+                        >
+                            <ArrowLeft className="h-5 w-5" />
+                        </Link>
+                        <div className="min-w-0 flex-1">
+                            {isEditingName ? (
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <input
+                                        value={nameInput}
+                                        onChange={(e) => setNameInput(e.target.value)}
+                                        className="w-full min-w-0 bg-gray-950 border border-gray-800 rounded-lg px-3 py-1.5 outline-none focus:border-green-600 text-lg sm:text-2xl font-bold"
+                                        autoFocus
+                                    />
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={saveName}
+                                            disabled={savingName}
+                                            className="p-2 rounded-lg bg-green-600 hover:bg-green-500 disabled:opacity-60 transition-colors"
+                                            aria-label="Salvar"
+                                        >
+                                            {savingName ? (
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <Check className="h-4 w-4" />
+                                            )}
+                                        </button>
+                                        <button
+                                            onClick={() => setIsEditingName(false)}
+                                            disabled={savingName}
+                                            className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                                            aria-label="Cancelar"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <h1 className="text-xl sm:text-3xl font-bold truncate">
+                                        {group.name}
+                                    </h1>
+                                    <button
+                                        onClick={startEditName}
+                                        className="text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg shrink-0"
+                                        aria-label="Editar nome"
+                                    >
+                                        <Pencil className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            )}
+                            <p className="text-gray-400 text-sm sm:text-base mt-1 flex items-center gap-1.5">
+                                <Users className="h-4 w-4 shrink-0" />
+                                {group.members?.length ?? 0}{" "}
+                                {group.members?.length === 1 ? "membro" : "membros"}
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="shrink-0 flex items-center gap-2">
+                    <div className="flex gap-2">
                         <button
                             onClick={generateReport}
-                            className="flex items-center gap-1.5 text-sm text-gray-300 hover:text-white hover:bg-green-600/20 transition-colors px-3 py-2 rounded-lg border border-gray-800"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-sm text-gray-300 hover:text-white hover:bg-green-600/20 transition-colors px-3 py-2 rounded-lg border border-gray-800"
                         >
-                            <FileText className="h-4 w-4" />
-                            Gerar relatório
+                            <FileText className="h-4 w-4 shrink-0" />
+                            <span className="truncate">Relatório</span>
                         </button>
                         <button
                             onClick={() => setIsLeaveModalOpen(true)}
-                            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors px-3 py-2 rounded-lg"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors px-3 py-2 rounded-lg border border-gray-800"
                         >
-                            <LogOut className="h-4 w-4" />
-                            Sair do grupo
+                            <LogOut className="h-4 w-4 shrink-0" />
+                            <span className="truncate">Sair do grupo</span>
                         </button>
                     </div>
                 </div>
@@ -282,7 +288,7 @@ export function GroupExpensesPage() {
                     <div className="lg:col-span-1">
                         <Card>
                             <div className="text-gray-400 text-sm">Total do grupo</div>
-                            <div className="text-3xl font-bold mt-1 text-green-300 break-words">
+                            <div className="text-2xl sm:text-3xl font-bold mt-1 text-green-300 break-words">
                                 {formatBRL(total)}
                             </div>
                         </Card>
@@ -297,11 +303,13 @@ export function GroupExpensesPage() {
                                         return (
                                             <li
                                                 key={member.id}
-                                                className="flex items-center justify-between text-sm"
+                                                className="flex items-center gap-2 text-sm"
                                             >
-                                                <span className="flex items-center gap-1.5 text-gray-300">
-                                                    <UserRound className="h-3.5 w-3.5" />
-                                                    {member.user?.name} (você)
+                                                <span className="flex items-center gap-1.5 text-gray-300 min-w-0">
+                                                    <UserRound className="h-3.5 w-3.5 shrink-0" />
+                                                    <span className="truncate">
+                                                        {member.user?.name} (você)
+                                                    </span>
                                                 </span>
                                             </li>
                                         );
@@ -312,24 +320,24 @@ export function GroupExpensesPage() {
                                     return (
                                         <li
                                             key={member.id}
-                                            className="flex items-center justify-between text-sm"
+                                            className="flex items-center justify-between gap-2 text-sm flex-wrap"
                                         >
-                                            <span className="flex items-center gap-1.5 text-gray-300">
-                                                <UserRound className="h-3.5 w-3.5" />
-                                                {member.user?.name}
+                                            <span className="flex items-center gap-1.5 text-gray-300 min-w-0">
+                                                <UserRound className="h-3.5 w-3.5 shrink-0" />
+                                                <span className="truncate">{member.user?.name}</span>
                                             </span>
                                             {balance > 0 && (
-                                                <span className="text-green-400 font-medium">
+                                                <span className="text-green-400 font-medium shrink-0">
                                                     deve {formatBRL(balance)}
                                                 </span>
                                             )}
                                             {balance < 0 && (
-                                                <span className="text-red-400 font-medium">
+                                                <span className="text-red-400 font-medium shrink-0">
                                                     você deve {formatBRL(Math.abs(balance))}
                                                 </span>
                                             )}
                                             {balance === 0 && (
-                                                <span className="text-gray-500">quitado</span>
+                                                <span className="text-gray-500 shrink-0">quitado</span>
                                             )}
                                         </li>
                                     );
@@ -377,9 +385,9 @@ export function GroupExpensesPage() {
                                                 return (
                                                     <div
                                                         key={split.id}
-                                                        className="flex items-center gap-2 text-xs text-gray-400"
+                                                        className="flex items-center gap-2 text-xs text-gray-400 flex-wrap min-w-0"
                                                     >
-                                                        <span>
+                                                        <span className="truncate">
                                                             {memberName(split.userId, expense)}:{" "}
                                                             <span className="text-gray-300">
                                                                 {formatBRL(split.amount)}
@@ -390,7 +398,7 @@ export function GroupExpensesPage() {
                                                             <button
                                                                 onClick={() => handlePaySplit(expense.id)}
                                                                 disabled={payingId === expense.id}
-                                                                className="flex items-center gap-1 text-green-400 hover:text-green-300 hover:bg-green-500/10 disabled:opacity-60 transition-colors px-2 py-0.5 rounded-md border border-green-800"
+                                                                className="flex items-center gap-1 text-green-400 hover:text-green-300 hover:bg-green-500/10 disabled:opacity-60 transition-colors px-2 py-0.5 rounded-md border border-green-800 shrink-0"
                                                             >
                                                                 {payingId === expense.id ? (
                                                                     <Loader2 className="h-3 w-3 animate-spin" />
@@ -402,7 +410,7 @@ export function GroupExpensesPage() {
                                                         )}
 
                                                         {isMe && split.isPaid && (
-                                                            <span className="text-green-500 text-[11px]">
+                                                            <span className="text-green-500 text-[11px] shrink-0">
                                                                 ✓ paga
                                                             </span>
                                                         )}

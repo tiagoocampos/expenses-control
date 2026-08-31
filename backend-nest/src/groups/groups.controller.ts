@@ -31,12 +31,16 @@ export class GroupsController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupsService.update(id, updateGroupDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateGroupDto: UpdateGroupDto,
+    @CurrentUser('userId') userId: number,
+  ) {
+    return this.groupsService.update(id, updateGroupDto, userId);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.groupsService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser('userId') userId: number) {
+    return this.groupsService.remove(id, userId);
   }
 }

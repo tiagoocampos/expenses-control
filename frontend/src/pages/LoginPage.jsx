@@ -4,6 +4,7 @@ import { Header } from "../components/Header";
 import { useState } from "react";
 import { toast } from "sonner";
 import { userLogin } from "../services/api";
+import { Loader2 } from "lucide-react";
 
 
 export function LoginPage() {
@@ -11,14 +12,14 @@ export function LoginPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const [saving, setSaving] = useState(false);
 
     async function Login() {
         if (!email || !password) {
             toast.error("Preencha os campos corretamente");
             return;
         }
-
+        setSaving(true);
         try {
             const data = await userLogin({ email, password });
             localStorage.setItem("token", data.access_token);
@@ -28,6 +29,8 @@ export function LoginPage() {
         } catch (error) {
             console.log(error)
             toast.error(error.message);
+        } finally {
+            setSaving(false);
         }
     }
 
@@ -78,10 +81,19 @@ export function LoginPage() {
 
                         <button
                             type="button"
-                            className="w-full bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base mt-2"
+                            className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 transition-colors px-4 py-2 rounded-lg font-medium text-sm sm:text-base mt-2"
                             onClick={Login}
                         >
-                            Entrar
+                        {saving ? (
+                                <>
+                                    <Loader2 className="animate-spin" />
+                                    Entrando...
+                                </>
+                            ) : (
+                                <>
+                                    Entrar
+                                </>
+                            )}
                         </button>
                     </form>
 

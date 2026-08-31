@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CreateCategoryModal } from "./CreateCategoryModal";
 import { createExpense, getCategories, getGroups } from "../services/api";
+import { Loader2, Save } from "lucide-react";
 
 export function ExpenseForm() {
     const [title, setTitle] = useState("");
@@ -11,7 +12,7 @@ export function ExpenseForm() {
     const [categoryList, setCategoryList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userId, setUserId] = useState(null);
-
+    const [saving, setSaving] = useState(false);
     const [groupList, setGroupList] = useState([]);
     const [groupId, setGroupId] = useState("");
 
@@ -41,6 +42,7 @@ export function ExpenseForm() {
             return;
         }
 
+        setSaving(true);
         try {
             const data = await createExpense({
                 category_id: Number(category),
@@ -55,6 +57,8 @@ export function ExpenseForm() {
         } catch (error) {
             console.log(error);
             toast.error(error.message);
+        } finally {
+            setSaving(false);
         }
     }
 
@@ -167,9 +171,19 @@ export function ExpenseForm() {
                     <button
                         type="button"
                         onClick={addExpense}
-                        className="flex-1 bg-green-600 hover:bg-green-500 transition-colors px-4 py-3 rounded-lg font-medium text-sm sm:text-base"
+                        className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 transition-colors px-4 py-3 rounded-lg font-medium text-sm sm:text-base"
                     >
-                        Salvar despesa
+                        {saving ? (
+                                            <>
+                                                <Loader2 className="animate-spin" />
+                                                Salvando despesa...
+                                            </>
+                                        ) : (
+                                            <>
+
+                                                Salvar despesa
+                                            </>
+                                        )}
                     </button>
                 </div>
             </form>

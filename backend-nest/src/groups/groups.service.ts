@@ -81,19 +81,29 @@ export class GroupsService {
     });
   }
 
-  async update(id: number, updateGroupDto: UpdateGroupDto) {
-    try {
-      return await this.prisma.group.update({ where: { id }, data: updateGroupDto });
-    } catch {
+  async update(id: number, updateGroupDto: UpdateGroupDto, userId: number) {
+    const group = await this.prisma.group.findUnique({
+      where: { id },
+      include: { members: true },
+    });
+
+    if (!group || !group.members.some((m) => m.userId === userId)) {
       throw new NotFoundException('Grupo não encontrado');
     }
+
+    return this.prisma.group.update({ where: { id }, data: updateGroupDto });
   }
 
-  async remove(id: number) {
-    try {
-      return await this.prisma.group.delete({ where: { id } });
-    } catch {
+  async remove(id: number, userId: number) {
+    const group = await this.prisma.group.findUnique({
+      where: { id },
+      include: { members: true },
+    });
+
+    if (!group || !group.members.some((m) => m.userId === userId)) {
       throw new NotFoundException('Grupo não encontrado');
     }
+
+    return this.prisma.group.delete({ where: { id } });
   }
 }
